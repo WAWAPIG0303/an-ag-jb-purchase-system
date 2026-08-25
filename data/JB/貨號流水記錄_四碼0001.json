@@ -214,6 +214,15 @@
       "brand_code": "3",
       "vendor_code": "C64",
       "original": "2777"
+    },
+    "000|9552": {
+      "base8": "34001111",
+      "sequence": 11,
+      "category": "褲子",
+      "category_code": "4",
+      "brand_code": "3",
+      "vendor_code": "000",
+      "original": "9552"
     }
   },
   "next_sequence_by_category": {
@@ -221,7 +230,7 @@
     "1": 26,
     "2": 1,
     "3": 1,
-    "4": 11,
+    "4": 12,
     "6": 10,
     "7": 1,
     "8": 13
