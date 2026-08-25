@@ -232,6 +232,24 @@
       "brand_code": "3",
       "vendor_code": "000",
       "original": "9590"
+    },
+    "C65|8857": {
+      "base8": "38001362",
+      "sequence": 13,
+      "category": "套裝",
+      "category_code": "8",
+      "brand_code": "3",
+      "vendor_code": "C65",
+      "original": "8857"
+    },
+    "C65|8819": {
+      "base8": "38001462",
+      "sequence": 14,
+      "category": "套裝",
+      "category_code": "8",
+      "brand_code": "3",
+      "vendor_code": "C65",
+      "original": "8819"
     }
   },
   "next_sequence_by_category": {
@@ -242,6 +260,6 @@
     "4": 12,
     "6": 10,
     "7": 1,
-    "8": 13
+    "8": 15
   }
 }
