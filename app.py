@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import re, io, json, zipfile, base64, requests
+from datetime import datetime
+from zoneinfo import ZoneInfo
 from copy import copy, deepcopy
 from pathlib import Path
 from PIL import Image
@@ -16,6 +18,8 @@ BRAND_OPTIONS = {
     "AG": "AG｜13碼完整貨號",
     "JB": "JB｜8碼主貨號",
 }
+MASTER_BRAND_CODES = {"AN": "006", "AG": "008", "JB": "011"}
+APP_VERSION = "20260825-3"
 brand = st.sidebar.radio(
     "選擇品牌",
     list(BRAND_OPTIONS),
@@ -35,6 +39,7 @@ if st.session_state.get("active_brand") != brand:
             st.session_state.pop(state_key, None)
 
 st.title(f"🧾 {brand} 採購系統")
+st.caption(f"系統版本：{APP_VERSION}")
 if brand == "AN":
     st.caption("商品照片 OCR → 資料複查 → 8碼主貨號 → 採購單＋商品基本資料")
 elif brand == "AG":
@@ -1114,7 +1119,7 @@ def create_purchase_workbooks(df, template_bytes, brand_name, brand_code, option
                 "數量":safe_int(r["數量"], ""),
                 "到貨日":"",
                 "備註1":"",
-                "備註2":r["備註2"]
+                "備註2":r.get("備註2", "")
             }
             for h,v in vals.items():
                 if h in headers:
@@ -1128,6 +1133,9 @@ def create_master_workbook(df, template_bytes, code_by_key, color_map, brand_nam
     target=['商品型號','品名規格','供應廠商','品牌編號','建議售價','起始進價','最後進價',
             '特價','類別1','類別2','類別3','類別4','類別5','尺碼代號','季別','建檔日期',
             '備註1','原廠編號','材質四']
+    # 直接在 Excel 產出層固定正確值，避免畫面暫存或舊參數影響結果。
+    master_brand_code = MASTER_BRAND_CODES[brand_name]
+    build_date = datetime.now(ZoneInfo("Asia/Taipei")).strftime("%Y%m%d")
     records=[]
     missing_colors=[]
     for (vendor_code,original),g in df.groupby(["廠商代碼","原廠編號"],sort=False):
@@ -1172,7 +1180,7 @@ def create_master_workbook(df, template_bytes, code_by_key, color_map, brand_nam
                 "商品型號":product_code,
                 "品名規格":product_code+cname if brand_name == "AG" else base+cname,
                 "供應廠商":vendor_code,
-                "品牌編號":brand_code,
+                "品牌編號":master_brand_code,
                 "建議售價":master_price,
                 "起始進價":safe_int(first["進價"], ""),
                 "最後進價":safe_int(first["進價"], ""),
@@ -1182,8 +1190,9 @@ def create_master_workbook(df, template_bytes, code_by_key, color_map, brand_nam
                 "類別3":summary_number if brand_name == "AG" else "",
                 "類別4":summary_number if brand_name == "AG" else "",
                 "類別5":str(ccode),"尺碼代號":sizecode,
-                "季別":season,"建檔日期":optional_date,
-                "備註1":note1,"原廠編號":original,"材質四":first["備註2"],
+                "季別":season,"建檔日期":build_date,
+                "備註1":note1,"原廠編號":original,
+                "材質四":first.get("備註2", ""),
                 "數量":sum(safe_int(v, 0) or 0 for v in cg["數量"])
             })
     if missing_colors:
@@ -1511,14 +1520,22 @@ if st.button("🔍 開始 OCR 辨識",type="primary",disabled=not images):
 
 if st.session_state.ocr_df is not None:
     st.header("② 確認／修改資料")
-    st.info("可以直接點表格修改。新廠商請填入『廠商名稱＋廠商代碼』，產生後會自動永久保存。")
+    st.info("可以直接點表格修改。備註1、備註2皆為選填，可保持空白；新廠商請填入『廠商名稱＋廠商代碼』，產生後會自動永久保存。")
     edited=st.data_editor(
         st.session_state.ocr_df.drop(columns=["OCR文字"],errors="ignore"),
         num_rows="dynamic",
         use_container_width=True,
+        column_config={
+            "備註1": st.column_config.TextColumn("備註1（選填）", required=False),
+            "備註2": st.column_config.TextColumn("備註2（選填）", required=False),
+        },
         key="editor"
     )
     edited=edited.copy()
+    for optional_note in ["備註1", "備註2"]:
+        if optional_note not in edited.columns:
+            edited[optional_note] = ""
+        edited[optional_note] = edited[optional_note].fillna("")
 
     # 目前畫面上的人工修改就是最終資料來源
     edited = mark_manual_edits_as_final(edited)
@@ -1637,19 +1654,32 @@ if st.session_state.ocr_df is not None:
 
     a,b,c,d=st.columns(4)
     if brand == "AN":
-        with a: brand_code=st.text_input("品牌代碼",value="6",key="AN_brand_code")
+        brand_code="6"
+        output_brand_code="006"
+        with a: st.text_input("採購單品牌代碼",value=output_brand_code,disabled=True,key="AN_brand_code")
         with b: season=st.text_input("季別",key="AN_season")
         with c: custom_code=st.text_input("8碼貨號第3～5碼",max_chars=3,placeholder="例如 813",key="AN_custom")
     elif brand == "AG":
         with a: season=st.radio("季別／第1碼",["春夏","秋冬"],horizontal=True,key="AG_season")
         brand_code="5" if season=="春夏" else "9"
+        output_brand_code="008"
         with b: st.text_input("第1碼",value=brand_code,disabled=True,key="AG_brand_digit")
         with c: custom_code=st.text_input("13碼第7～8碼（整批共用）",max_chars=2,placeholder="例如 23",key="AG_custom")
     else:
-        with a: brand_code=st.text_input("品牌代碼／第1碼",value="3",max_chars=1,key="JB_brand_digit")
+        brand_code="3"
+        output_brand_code="011"
+        with a: st.text_input("採購單品牌代碼",value=output_brand_code,disabled=True,key="JB_brand_code")
         with b: season=st.text_input("季別",key="JB_season")
         with c: custom_code=st.text_input("8碼第7～8碼（整批共用）",max_chars=2,placeholder="例如 23",key="JB_custom")
-    with d: optional_date=st.text_input("日期（選填）",placeholder="例如 8/24",key=f"{brand}_date")
+    default_build_date = datetime.now(ZoneInfo("Asia/Taipei")).strftime("%Y%m%d")
+    with d:
+        optional_date=st.text_input(
+            "建檔日期（YYYYMMDD）",
+            value=default_build_date,
+            max_chars=8,
+            placeholder="例如 20260825",
+            key=f"{brand}_date",
+        ).strip()
     optional_page=st.text_input("頁數（選填）",key=f"{brand}_page")
 
     batch_categories = []
@@ -1776,7 +1806,10 @@ if st.session_state.ocr_df is not None:
     st.header("③ 產生採購單")
     if st.button("✅ 產生採購單＋商品基本資料",type="primary"):
         try:
-            required=["廠商","廠商代碼","原廠編號","類別代碼","類別","顏色","尺寸","進價","售價","數量","備註2"]
+            if not re.fullmatch(r"\d{8}", optional_date or ""):
+                raise ValueError("建檔日期必須是8位數字，格式為 YYYYMMDD，例如 20260825。")
+            # 備註1、備註2皆為選填；照片沒有資料時不阻擋產出。
+            required=["廠商","廠商代碼","原廠編號","類別代碼","類別","顏色","尺寸","進價","售價","數量"]
             if brand == "AG":
                 required.append("摘要")
             problems=[]
@@ -1813,11 +1846,11 @@ if st.session_state.ocr_df is not None:
                 )
 
             purchase_outputs=create_purchase_workbooks(
-                final_df,config_bytes["purchase_template"],brand,brand_code,optional_date,optional_page
+                final_df,config_bytes["purchase_template"],brand,output_brand_code,optional_date,optional_page
             )
             master_name,master_bytes,master_df=create_master_workbook(
                 final_df,config_bytes["master_template"],code_by_key,live_color_map,
-                brand,brand_code,season,optional_date
+                brand,output_brand_code,season,optional_date
             )
 
             zbio=io.BytesIO()
