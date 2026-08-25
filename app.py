@@ -914,14 +914,32 @@ def build_global_next_sequence(ledger, code_field, sequence_slice):
     return next_no
 
 
-def assign_ag_codes(df, ledger, season_digit, custom_code, seq_mode, manual_start, color_map):
+def build_category_next_sequences_4(ledger, code_field):
+    """由既有 AG／JB 貨號反推各類別自己的4碼下一號。"""
+    seq_map = dict(ledger.get("next_sequence_by_category", {}) or {})
+    for info in (ledger.get("assignments", {}) or {}).values():
+        code = str(info.get(code_field, "") or "").strip()
+        if not re.fullmatch(r"\d{8,11}", code):
+            continue
+        catcode = code[1]
+        try:
+            used_seq = int(info.get("sequence")) if info.get("sequence") is not None else int(code[2:6])
+        except Exception:
+            continue
+        seq_map[catcode] = max(int(seq_map.get(catcode, 1)), used_seq + 1)
+    for catcode in CATEGORY_PRODUCT_CODE.values():
+        seq_map.setdefault(str(catcode), 1)
+    return seq_map
+
+
+def assign_ag_codes(df, ledger, season_digit, custom_code, seq_mode, manual_starts, color_map):
     """
     AG 13碼：季別1＋類別1＋流水4＋自填2＋售價去個位3＋顏色2。
     同款不同顏色共用流水號，只更換最後2碼顏色。
     """
     working = deepcopy(ledger)
     working.setdefault("assignments", {})
-    working["next_sequence"] = build_global_next_sequence(working, "prefix11", slice(2, 6))
+    working["next_sequence_by_category"] = build_category_next_sequences_4(working, "prefix11")
     prefix_by_key = {}
     statuses = []
     used = {
@@ -929,7 +947,12 @@ def assign_ag_codes(df, ledger, season_digit, custom_code, seq_mode, manual_star
         for v in working["assignments"].values()
         if str(v.get("prefix11", "") or "").strip()
     }
-    current = int(manual_start) if seq_mode == "manual" else int(working["next_sequence"])
+    used_sequences = {
+        (code[1], int(code[2:6]))
+        for code in used
+        if re.fullmatch(r"\d{11}", code)
+    }
+    manual_current = {str(k): int(v) for k, v in (manual_starts or {}).items()}
 
     for (vendor_code, original), g in df.groupby(["廠商代碼", "原廠編號"], sort=False):
         key = f"{vendor_code}|{original}"
@@ -948,14 +971,17 @@ def assign_ag_codes(df, ledger, season_digit, custom_code, seq_mode, manual_star
             price_value = price // 10
             if price_value > 999:
                 raise ValueError(f"售價 {price} 去掉個位數後超過3碼。")
-            if current > 9999:
+            sequence = int(manual_current.get(catcode, working["next_sequence_by_category"].get(catcode, 1))) if seq_mode == "manual" else int(working["next_sequence_by_category"].get(catcode, 1))
+            if sequence > 9999:
                 raise ValueError("AG 流水號已超過9999。")
-            prefix11 = f"{season_digit}{catcode}{current:04d}{custom_code}{price_value:03d}"
+            if (catcode, sequence) in used_sequences:
+                raise ValueError(f"AG「{cat}」流水號 {sequence:04d} 已被其他款式使用，請改用不同號碼。")
+            prefix11 = f"{season_digit}{catcode}{sequence:04d}{custom_code}{price_value:03d}"
             if prefix11 in used:
                 raise ValueError(f"AG 前11碼 {prefix11} 已存在，請調整起始流水號。")
             working["assignments"][key] = {
                 "prefix11": prefix11,
-                "sequence": current,
+                "sequence": sequence,
                 "category": cat,
                 "category_code": catcode,
                 "vendor_code": str(vendor_code),
@@ -963,9 +989,12 @@ def assign_ag_codes(df, ledger, season_digit, custom_code, seq_mode, manual_star
                 "price": price,
             }
             used.add(prefix11)
-            statuses.append(f"{original}：新編前11碼 {prefix11}")
-            current += 1
-            working["next_sequence"] = max(int(working["next_sequence"]), current)
+            used_sequences.add((catcode, sequence))
+            next_seq = sequence + 1
+            working["next_sequence_by_category"][catcode] = max(int(working["next_sequence_by_category"].get(catcode, 1)), next_seq)
+            if seq_mode == "manual":
+                manual_current[catcode] = next_seq
+            statuses.append(f"{original}：新編前11碼 {prefix11}（{cat}）")
         prefix_by_key[key] = prefix11
 
     result = df.copy()
@@ -977,14 +1006,15 @@ def assign_ag_codes(df, ledger, season_digit, custom_code, seq_mode, manual_star
         key = f'{row["廠商代碼"]}|{row["原廠編號"]}'
         return prefix_by_key[key] + ccode
     result["貨號"] = result.apply(full_ag_code, axis=1)
+    working["next_sequence"] = max(working["next_sequence_by_category"].values())
     return result, working, prefix_by_key, statuses
 
 
-def assign_jb_codes(df, ledger, custom_code, seq_mode, manual_start):
-    """JB 8碼：固定3＋類別1＋流水4＋自填2。"""
+def assign_jb_codes(df, ledger, brand_code, custom_code, seq_mode, manual_sequences=None):
+    """JB 8碼：自填品牌1＋類別1＋流水4＋自填2。"""
     working = deepcopy(ledger)
     working.setdefault("assignments", {})
-    working["next_sequence"] = build_global_next_sequence(working, "base8", slice(2, 6))
+    working["next_sequence_by_category"] = build_category_next_sequences_4(working, "base8")
     base_by_key = {}
     statuses = []
     used = {
@@ -992,7 +1022,12 @@ def assign_jb_codes(df, ledger, custom_code, seq_mode, manual_start):
         for v in working["assignments"].values()
         if str(v.get("base8", "") or "").strip()
     }
-    current = int(manual_start) if seq_mode == "manual" else int(working["next_sequence"])
+    used_sequences = {
+        (code[1], int(code[2:6]))
+        for code in used
+        if re.fullmatch(r"\d{8}", code)
+    }
+    manual_sequences = manual_sequences or {}
     for (vendor_code, original), g in df.groupby(["廠商代碼", "原廠編號"], sort=False):
         key = f"{vendor_code}|{original}"
         old = working["assignments"].get(key)
@@ -1004,28 +1039,33 @@ def assign_jb_codes(df, ledger, custom_code, seq_mode, manual_start):
             catcode = str(CATEGORY_PRODUCT_CODE.get(cat, ""))
             if not catcode:
                 raise ValueError(f"類別「{cat}」沒有對應的第2碼。")
-            if current > 9999:
+            sequence = int(manual_sequences.get(key, working["next_sequence_by_category"].get(catcode, 1))) if seq_mode == "manual" else int(working["next_sequence_by_category"].get(catcode, 1))
+            if sequence > 9999:
                 raise ValueError("JB 流水號已超過9999。")
-            base8 = f"3{catcode}{current:04d}{custom_code}"
+            if (catcode, sequence) in used_sequences:
+                raise ValueError(f"JB「{cat}」流水號 {sequence:04d} 已被其他款式使用，請改用不同號碼。")
+            base8 = f"{brand_code}{catcode}{sequence:04d}{custom_code}"
             if base8 in used:
                 raise ValueError(f"JB 貨號 {base8} 已存在，請調整起始流水號。")
             working["assignments"][key] = {
                 "base8": base8,
-                "sequence": current,
+                "sequence": sequence,
                 "category": cat,
                 "category_code": catcode,
+                "brand_code": str(brand_code),
                 "vendor_code": str(vendor_code),
                 "original": str(original),
             }
             used.add(base8)
-            statuses.append(f"{original}：新編 {base8}")
-            current += 1
-            working["next_sequence"] = max(int(working["next_sequence"]), current)
+            used_sequences.add((catcode, sequence))
+            statuses.append(f"{original}：新編 {base8}（{cat}）")
+            working["next_sequence_by_category"][catcode] = max(int(working["next_sequence_by_category"].get(catcode, 1)), sequence + 1)
         base_by_key[key] = base8
     result = df.copy()
     result["貨號"] = result.apply(
         lambda r: base_by_key[f'{r["廠商代碼"]}|{r["原廠編號"]}'], axis=1
     )
+    working["next_sequence"] = max(working["next_sequence_by_category"].values())
     return result, working, base_by_key, statuses
 
 def safe_int(v, default=None):
@@ -1320,15 +1360,16 @@ ledger.setdefault("next_sequence",1)
 ledger.setdefault("assignments",{})
 if brand == "AN":
     ledger["next_sequence_by_category"] = build_category_next_sequences(ledger)
+else:
+    code_field = "prefix11" if brand == "AG" else "base8"
+    ledger["next_sequence_by_category"] = build_category_next_sequences_4(ledger, code_field)
+if brand in ("AN", "AG", "JB"):
+    width = 3 if brand == "AN" else 4
     seq_summary = "｜".join(
-        f'{cat} {int(ledger["next_sequence_by_category"].get(str(code),1)):03d}'
+        f'{cat} {int(ledger["next_sequence_by_category"].get(str(code),1)):0{width}d}'
         for cat, code in CATEGORY_PRODUCT_CODE.items()
     )
     st.success(f"{brand} 設定已自動載入｜各類別下一號：{seq_summary}")
-else:
-    code_field = "prefix11" if brand == "AG" else "base8"
-    ledger["next_sequence"] = build_global_next_sequence(ledger, code_field, slice(2, 6))
-    st.success(f'{brand} 設定已自動載入｜下一個款式流水號：{int(ledger["next_sequence"]):04d}')
 
 with st.expander("⚙️ 管理固定設定（平常不用開）"):
     replace_kind=st.selectbox("要更新的資料",[
@@ -1583,8 +1624,7 @@ if st.session_state.ocr_df is not None:
         with b: st.text_input("第1碼",value=brand_code,disabled=True,key="AG_brand_digit")
         with c: custom_code=st.text_input("13碼第7～8碼（整批共用）",max_chars=2,placeholder="例如 23",key="AG_custom")
     else:
-        brand_code="3"
-        with a: st.text_input("品牌代碼／第1碼",value="3",disabled=True,key="JB_brand_digit")
+        with a: brand_code=st.text_input("品牌代碼／第1碼",value="3",max_chars=1,key="JB_brand_digit")
         with b: season=st.text_input("季別",key="JB_season")
         with c: custom_code=st.text_input("8碼第7～8碼（整批共用）",max_chars=2,placeholder="例如 23",key="JB_custom")
     with d: optional_date=st.text_input("日期（選填）",placeholder="例如 8/24",key=f"{brand}_date")
@@ -1592,15 +1632,17 @@ if st.session_state.ocr_df is not None:
 
     batch_categories = []
     manual_starts = {}
+    jb_manual_sequences = {}
     manual_start = int(ledger.get("next_sequence", 1))
+
+    if "類別" in edited.columns:
+        for cat in edited["類別"].dropna().astype(str):
+            cat = cat.strip()
+            if cat in CATEGORY_PRODUCT_CODE and cat not in batch_categories:
+                batch_categories.append(cat)
 
     if brand == "AN":
         st.subheader("商品流水號（依類別分開計算）")
-        if "類別" in edited.columns:
-            for cat in edited["類別"].dropna().astype(str):
-                cat = cat.strip()
-                if cat in CATEGORY_PRODUCT_CODE and cat not in batch_categories:
-                    batch_categories.append(cat)
 
         if batch_categories:
             cols = st.columns(min(4, len(batch_categories)))
@@ -1630,20 +1672,57 @@ if st.session_state.ocr_df is not None:
                         f"{cat} 起始流水號", min_value=1, max_value=999,
                         value=default_no, step=1, key=f"AN_manual_seq_{catcode}"
                     )
-    else:
-        st.subheader(f"{brand} 款式流水號（品牌獨立計算）")
-        next_no = int(ledger.get("next_sequence", 1))
-        st.metric("下一個款式流水號", f"{next_no:04d}")
+    elif brand == "AG":
+        st.subheader("AG 款式流水號（依類別分開計算）")
+        cols=st.columns(min(4,max(1,len(batch_categories))))
+        for i,cat in enumerate(batch_categories):
+            catcode=str(CATEGORY_PRODUCT_CODE[cat])
+            with cols[i % len(cols)]: st.metric(f"{cat} 下一號",f'{int(ledger["next_sequence_by_category"].get(catcode,1)):04d}')
         seq_label = st.radio(
-            "編號方式", ["按照系統紀錄接續", "自行設定起始流水號"],
+            "編號方式", ["按照各類別系統紀錄接續", "自行設定各類別起始流水號"],
             horizontal=True, key=f"{brand}_seq_mode"
         )
-        seq_mode = "system" if seq_label == "按照系統紀錄接續" else "manual"
+        seq_mode = "system" if seq_label == "按照各類別系統紀錄接續" else "manual"
         if seq_mode == "manual":
-            manual_start = st.number_input(
-                "起始流水號", min_value=1, max_value=9999,
-                value=next_no, step=1, key=f"{brand}_manual_seq"
-            )
+            mcols=st.columns(min(4,max(1,len(batch_categories))))
+            for i,cat in enumerate(batch_categories):
+                catcode=str(CATEGORY_PRODUCT_CODE[cat])
+                with mcols[i % len(mcols)]:
+                    manual_starts[catcode]=st.number_input(f"{cat} 起始流水號",min_value=1,max_value=9999,value=int(ledger["next_sequence_by_category"].get(catcode,1)),step=1,key=f"AG_manual_seq_{catcode}")
+    else:
+        st.subheader("JB 款式流水號（依類別分開計算）")
+        cols=st.columns(min(4,max(1,len(batch_categories))))
+        for i,cat in enumerate(batch_categories):
+            catcode=str(CATEGORY_PRODUCT_CODE[cat])
+            with cols[i % len(cols)]: st.metric(f"{cat} 下一號",f'{int(ledger["next_sequence_by_category"].get(catcode,1)):04d}')
+        seq_label = st.radio(
+            "編號方式", ["按照各類別系統紀錄接續", "逐款自行設定流水號"],
+            horizontal=True, key="JB_seq_mode"
+        )
+        seq_mode = "system" if seq_label == "按照各類別系統紀錄接續" else "manual"
+        if seq_mode == "manual":
+            st.caption("每個不同款式輸入各自的4碼流水號；同款不同顏色會共用。")
+            style_keys=[]
+            for (vendor_code, original), _group in edited.groupby(["廠商代碼", "原廠編號"], sort=False):
+                key=f"{vendor_code}|{original}"
+                if key not in style_keys:
+                    style_keys.append(key)
+            cols=st.columns(min(3, max(1, len(style_keys))))
+            category_offsets={}
+            for i,key in enumerate(style_keys):
+                vendor_code,original=key.split("|",1)
+                style_group=edited[(edited["廠商代碼"].astype(str)==vendor_code)&(edited["原廠編號"].astype(str)==original)]
+                cat=str(style_group.iloc[0]["類別"]).strip(); catcode=str(CATEGORY_PRODUCT_CODE.get(cat,""))
+                old=ledger.get("assignments",{}).get(key,{})
+                old_base=str(old.get("base8","") or "")
+                offset=category_offsets.get(catcode,0)
+                default_seq=int(old_base[2:6]) if re.fullmatch(r"\d{8}",old_base) else min(9999,int(ledger["next_sequence_by_category"].get(catcode,1))+offset)
+                if not re.fullmatch(r"\d{8}",old_base): category_offsets[catcode]=offset+1
+                with cols[i % len(cols)]:
+                    jb_manual_sequences[key]=st.number_input(
+                        f"{cat}｜款式 {original} 流水號", min_value=1, max_value=9999,
+                        value=default_seq, step=1, key=f"JB_manual_seq_{vendor_code}_{original}"
+                    )
 
     live_color_map=dict(color_map)
     missing_colors=[]
@@ -1687,6 +1766,8 @@ if st.session_state.ocr_df is not None:
                 raise ValueError("AN 8碼貨號第3～5碼必須輸入3位數字。")
             if brand in ("AG", "JB") and not re.fullmatch(r"\d{2}",custom_code or ""):
                 raise ValueError(f"{brand} 第7～8碼必須輸入2位數字。")
+            if brand == "JB" and not re.fullmatch(r"\d",brand_code or ""):
+                raise ValueError("JB 品牌代碼／第1碼必須輸入1位數字。")
             # 人工確認資料優先：產生前固定使用目前畫面 edited
             confirmed_df = mark_manual_edits_as_final(edited)
             st.session_state.ocr_df = confirmed_df.copy()
@@ -1702,11 +1783,11 @@ if st.session_state.ocr_df is not None:
                 )
             elif brand == "AG":
                 final_df,working,code_by_key,statuses=assign_ag_codes(
-                    confirmed_df,ledger,brand_code,custom_code,seq_mode,int(manual_start),live_color_map
+                    confirmed_df,ledger,brand_code,custom_code,seq_mode,manual_starts,live_color_map
                 )
             else:
                 final_df,working,code_by_key,statuses=assign_jb_codes(
-                    confirmed_df,ledger,custom_code,seq_mode,int(manual_start)
+                    confirmed_df,ledger,brand_code,custom_code,seq_mode,jb_manual_sequences
                 )
 
             purchase_outputs=create_purchase_workbooks(
@@ -1736,15 +1817,14 @@ if st.session_state.ocr_df is not None:
             if vendor_changed:
                 gh_write_bytes(CONFIG_PATHS["vendor"],vendor_map_to_excel(updated_vendor),f"更新 {brand} 廠商代碼")
 
-            if brand == "AN":
+            if brand in ("AN", "AG", "JB"):
+                width = 3 if brand == "AN" else 4
                 next_summary = "｜".join(
-                    f'{cat} {int(working["next_sequence_by_category"].get(str(code),1)):03d}'
+                    f'{cat} {int(working["next_sequence_by_category"].get(str(code),1)):0{width}d}'
                     for cat, code in CATEGORY_PRODUCT_CODE.items()
                     if cat in batch_categories
                 )
-                st.success(f"完成！AN 各類別流水號已永久保存｜{next_summary}")
-            else:
-                st.success(f'完成！{brand} 下一個款式流水號已保存：{int(working["next_sequence"]):04d}')
+                st.success(f"完成！{brand} 各類別流水號已永久保存｜{next_summary}")
             for s in statuses: st.write("•",s)
 
             st.subheader("本次採購單實際輸出資料")
