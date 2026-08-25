@@ -1,4 +1,21 @@
 {
-  "next_sequence": 1,
-  "assignments": {}
+  "next_sequence": 7,
+  "assignments": {
+    "C60|1810": {
+      "base8": "35000562",
+      "sequence": 5,
+      "category": "裙子",
+      "category_code": "5",
+      "vendor_code": "C60",
+      "original": "1810"
+    },
+    "C60|1809": {
+      "base8": "35000662",
+      "sequence": 6,
+      "category": "裙子",
+      "category_code": "5",
+      "vendor_code": "C60",
+      "original": "1809"
+    }
+  }
 }
