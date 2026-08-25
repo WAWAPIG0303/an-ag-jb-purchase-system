@@ -1146,22 +1146,44 @@ def create_master_workbook(df, template_bytes, code_by_key, color_map, brand_nam
             else:
                 product_code = base + str(ccode)
             summary_number = str(first.get("摘要", "") or "").strip()
+            photo_price = safe_int(first.get("售價"), "")
+            if isinstance(photo_price, int):
+                if brand_name == "AN":
+                    master_price = photo_price
+                    special_price = photo_price
+                    note1 = f"特價{photo_price}"
+                elif brand_name == "AG":
+                    master_price = photo_price * 2
+                    special_price = photo_price
+                    note1 = f"特價{photo_price}"
+                elif brand_name == "JB":
+                    master_price = photo_price * 2
+                    special_price = photo_price * 2
+                    note1 = f"特價{photo_price * 2}"
+                else:
+                    master_price = photo_price
+                    special_price = ""
+                    note1 = ""
+            else:
+                master_price = photo_price
+                special_price = ""
+                note1 = ""
             records.append({
                 "商品型號":product_code,
                 "品名規格":product_code+cname if brand_name == "AG" else base+cname,
                 "供應廠商":vendor_code,
                 "品牌編號":brand_code,
-                "建議售價":safe_int(first["售價"], ""),
+                "建議售價":master_price,
                 "起始進價":safe_int(first["進價"], ""),
                 "最後進價":safe_int(first["進價"], ""),
-                "特價":"",
+                "特價":special_price,
                 "類別1":"08",
                 "類別2":summary_number if brand_name == "AG" else "",
                 "類別3":summary_number if brand_name == "AG" else "",
                 "類別4":summary_number if brand_name == "AG" else "",
                 "類別5":str(ccode),"尺碼代號":sizecode,
                 "季別":season,"建檔日期":optional_date,
-                "備註1":"","原廠編號":original,"材質四":first["備註2"],
+                "備註1":note1,"原廠編號":original,"材質四":first["備註2"],
                 "數量":sum(safe_int(v, 0) or 0 for v in cg["數量"])
             })
     if missing_colors:
