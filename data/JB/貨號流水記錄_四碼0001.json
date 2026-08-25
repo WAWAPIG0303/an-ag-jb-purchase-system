@@ -1,5 +1,5 @@
 {
-  "next_sequence": 26,
+  "next_sequence": 30,
   "assignments": {
     "C60|1810": {
       "base8": "35000562",
@@ -250,11 +250,47 @@
       "brand_code": "3",
       "vendor_code": "C65",
       "original": "8819"
+    },
+    "C66|805": {
+      "base8": "31002662",
+      "sequence": 26,
+      "category": "上衣",
+      "category_code": "1",
+      "brand_code": "3",
+      "vendor_code": "C66",
+      "original": "805"
+    },
+    "C66|9950": {
+      "base8": "31002762",
+      "sequence": 27,
+      "category": "上衣",
+      "category_code": "1",
+      "brand_code": "3",
+      "vendor_code": "C66",
+      "original": "9950"
+    },
+    "C66|908": {
+      "base8": "31002862",
+      "sequence": 28,
+      "category": "上衣",
+      "category_code": "1",
+      "brand_code": "3",
+      "vendor_code": "C66",
+      "original": "908"
+    },
+    "C66|908-2": {
+      "base8": "31002962",
+      "sequence": 29,
+      "category": "上衣",
+      "category_code": "1",
+      "brand_code": "3",
+      "vendor_code": "C66",
+      "original": "908-2"
     }
   },
   "next_sequence_by_category": {
     "5": 11,
-    "1": 26,
+    "1": 30,
     "2": 1,
     "3": 1,
     "4": 12,
