@@ -1148,7 +1148,7 @@ def create_master_workbook(df, template_bytes, code_by_key, color_map, brand_nam
 # GitHub 永久保存（data 分支）
 # -------------------------
 GITHUB_OWNER = "WAWAPIG0303"
-GITHUB_REPO = "AN-purchase-system"
+GITHUB_REPO = "an-ag-jb-purchase-system"
 DATA_BRANCH = "data"
 AN_CONFIG_PATHS = {
     "vendor": "data/廠商代碼.xlsx",
