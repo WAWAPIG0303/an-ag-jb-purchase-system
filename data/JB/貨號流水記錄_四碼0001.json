@@ -1,5 +1,5 @@
 {
-  "next_sequence": 13,
+  "next_sequence": 26,
   "assignments": {
     "C60|1810": {
       "base8": "35000562",
@@ -124,15 +124,105 @@
       "brand_code": "3",
       "vendor_code": "C63",
       "original": "6791-下"
+    },
+    "C64|6419": {
+      "base8": "31001962",
+      "sequence": 19,
+      "category": "上衣",
+      "category_code": "1",
+      "brand_code": "3",
+      "vendor_code": "C64",
+      "original": "6419"
+    },
+    "C64|61021": {
+      "base8": "31002062",
+      "sequence": 20,
+      "category": "上衣",
+      "category_code": "1",
+      "brand_code": "3",
+      "vendor_code": "C64",
+      "original": "61021"
+    },
+    "C64|8608": {
+      "base8": "36000762",
+      "sequence": 7,
+      "category": "外套",
+      "category_code": "6",
+      "brand_code": "3",
+      "vendor_code": "C64",
+      "original": "8608"
+    },
+    "C64|2580": {
+      "base8": "31002162",
+      "sequence": 21,
+      "category": "上衣",
+      "category_code": "1",
+      "brand_code": "3",
+      "vendor_code": "C64",
+      "original": "2580"
+    },
+    "C64|839": {
+      "base8": "36000862",
+      "sequence": 8,
+      "category": "外套",
+      "category_code": "6",
+      "brand_code": "3",
+      "vendor_code": "C64",
+      "original": "839"
+    },
+    "C64|6637": {
+      "base8": "31002262",
+      "sequence": 22,
+      "category": "上衣",
+      "category_code": "1",
+      "brand_code": "3",
+      "vendor_code": "C64",
+      "original": "6637"
+    },
+    "C64|669": {
+      "base8": "31002362",
+      "sequence": 23,
+      "category": "上衣",
+      "category_code": "1",
+      "brand_code": "3",
+      "vendor_code": "C64",
+      "original": "669"
+    },
+    "C64|1955": {
+      "base8": "36000962",
+      "sequence": 9,
+      "category": "外套",
+      "category_code": "6",
+      "brand_code": "3",
+      "vendor_code": "C64",
+      "original": "1955"
+    },
+    "C64|235": {
+      "base8": "31002462",
+      "sequence": 24,
+      "category": "上衣",
+      "category_code": "1",
+      "brand_code": "3",
+      "vendor_code": "C64",
+      "original": "235"
+    },
+    "C64|2777": {
+      "base8": "31002562",
+      "sequence": 25,
+      "category": "上衣",
+      "category_code": "1",
+      "brand_code": "3",
+      "vendor_code": "C64",
+      "original": "2777"
     }
   },
   "next_sequence_by_category": {
     "5": 11,
-    "1": 1,
+    "1": 26,
     "2": 1,
     "3": 1,
     "4": 11,
-    "6": 7,
+    "6": 10,
     "7": 1,
     "8": 13
   }
