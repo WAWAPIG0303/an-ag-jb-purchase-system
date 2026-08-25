@@ -223,6 +223,15 @@
       "brand_code": "3",
       "vendor_code": "000",
       "original": "9552"
+    },
+    "000|9590": {
+      "base8": "34000800",
+      "sequence": 8,
+      "category": "褲子",
+      "category_code": "4",
+      "brand_code": "3",
+      "vendor_code": "000",
+      "original": "9590"
     }
   },
   "next_sequence_by_category": {
