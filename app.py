@@ -2,8 +2,6 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import re, io, json, zipfile, base64, requests
-from datetime import datetime
-from zoneinfo import ZoneInfo
 from copy import copy, deepcopy
 from pathlib import Path
 from PIL import Image
@@ -18,8 +16,6 @@ BRAND_OPTIONS = {
     "AG": "AG｜13碼完整貨號",
     "JB": "JB｜8碼主貨號",
 }
-MASTER_BRAND_CODES = {"AN": "006", "AG": "008", "JB": "011"}
-APP_VERSION = "20260825-3"
 brand = st.sidebar.radio(
     "選擇品牌",
     list(BRAND_OPTIONS),
@@ -39,7 +35,6 @@ if st.session_state.get("active_brand") != brand:
             st.session_state.pop(state_key, None)
 
 st.title(f"🧾 {brand} 採購系統")
-st.caption(f"系統版本：{APP_VERSION}")
 if brand == "AN":
     st.caption("商品照片 OCR → 資料複查 → 8碼主貨號 → 採購單＋商品基本資料")
 elif brand == "AG":
@@ -101,6 +96,30 @@ def read_color_lookup(data):
 CATEGORY_PRODUCT_CODE = {
     "上衣":"1","短洋":"2","長洋":"3","褲子":"4",
     "裙子":"5","外套":"6","配件":"7","套裝":"8"
+}
+
+# AN SHOPLINE 匯入設定
+SHOP_PUBLIC_IMAGE = "https://img.shoplineapp.com/media/image_clips/6a7d8e3b248714806e198141/original.jpg?1786613306=&owner_id=6303abd11e74450050ed2473"
+SHOP_MEMBER_PRICES = {
+    780:(741,718,702), 880:(836,810,792), 980:(931,902,882),
+    1080:(1026,994,972), 1090:(1036,1003,981), 1180:(1121,1086,1062),
+    1280:(1216,1178,1152), 1380:(1311,1270,1242), 1480:(1406,1362,1332),
+    1580:(1501,1454,1422), 1680:(1596,1546,1512), 1780:(1691,1638,1602),
+    1880:(1786,1730,1692), 1980:(1881,1822,1782), 2080:(1976,1914,1872),
+    2180:(2071,2006,1962), 2280:(2166,2098,2052), 2380:(2261,2190,2142),
+    2480:(2356,2282,2232), 2580:(2451,2374,2322),
+}
+SHOP_CLASSIFICATIONS = {
+    "上衣": ("All Products / 所有商品>Top / 上身", "上衣"),
+    "短洋": ("All Products / 所有商品>One piece / 連身>Dress / 洋裝", "短洋"),
+    "長洋": ("All Products / 所有商品>One piece / 連身>Dress / 洋裝", "長洋"),
+    "短褲": ("All Products / 所有商品>Bottom / 下身>Shorts / 短褲", "短褲"),
+    "長褲": ("All Products / 所有商品>Bottom / 下身>Pants / 長褲", "長褲"),
+    "短裙": ("All Products / 所有商品>Bottom / 下身>Skirt / 裙裝", "短裙"),
+    "長裙": ("All Products / 所有商品>Bottom / 下身>Skirt / 裙裝", "長裙"),
+    "外套": ("All Products / 所有商品>Outerwear / 外套", "外套"),
+    "配件": ("All Products / 所有商品>Acc / 配件", "配件"),
+    "套裝": ("All Products / 所有商品>Set/套裝", "套裝"),
 }
 
 @st.cache_resource(show_spinner="第一次啟動 OCR 需要載入免費模型，請稍候…")
@@ -1119,7 +1138,7 @@ def create_purchase_workbooks(df, template_bytes, brand_name, brand_code, option
                 "數量":safe_int(r["數量"], ""),
                 "到貨日":"",
                 "備註1":"",
-                "備註2":r.get("備註2", "")
+                "備註2":r["備註2"]
             }
             for h,v in vals.items():
                 if h in headers:
@@ -1133,9 +1152,6 @@ def create_master_workbook(df, template_bytes, code_by_key, color_map, brand_nam
     target=['商品型號','品名規格','供應廠商','品牌編號','建議售價','起始進價','最後進價',
             '特價','類別1','類別2','類別3','類別4','類別5','尺碼代號','季別','建檔日期',
             '備註1','原廠編號','材質四']
-    # 直接在 Excel 產出層固定正確值，避免畫面暫存或舊參數影響結果。
-    master_brand_code = MASTER_BRAND_CODES[brand_name]
-    build_date = datetime.now(ZoneInfo("Asia/Taipei")).strftime("%Y%m%d")
     records=[]
     missing_colors=[]
     for (vendor_code,original),g in df.groupby(["廠商代碼","原廠編號"],sort=False):
@@ -1155,32 +1171,14 @@ def create_master_workbook(df, template_bytes, code_by_key, color_map, brand_nam
                 product_code = base + str(ccode)
             summary_number = str(first.get("摘要", "") or "").strip()
             photo_price = safe_int(first.get("售價"), "")
-            if isinstance(photo_price, int):
-                if brand_name == "AN":
-                    master_price = photo_price
-                    special_price = photo_price
-                    note1 = f"特價{photo_price}"
-                elif brand_name == "AG":
-                    master_price = photo_price * 2
-                    special_price = photo_price
-                    note1 = f"特價{photo_price}"
-                elif brand_name == "JB":
-                    master_price = photo_price * 2
-                    special_price = photo_price * 2
-                    note1 = f"特價{photo_price * 2}"
-                else:
-                    master_price = photo_price
-                    special_price = ""
-                    note1 = ""
-            else:
-                master_price = photo_price
-                special_price = ""
-                note1 = ""
+            master_price = photo_price * 2 if brand_name == "JB" and isinstance(photo_price, int) else photo_price
+            special_price = master_price if brand_name == "JB" else ""
+            note1 = f"特價{photo_price}" if brand_name == "JB" and isinstance(photo_price, int) else ""
             records.append({
                 "商品型號":product_code,
                 "品名規格":product_code+cname if brand_name == "AG" else base+cname,
                 "供應廠商":vendor_code,
-                "品牌編號":master_brand_code,
+                "品牌編號":brand_code,
                 "建議售價":master_price,
                 "起始進價":safe_int(first["進價"], ""),
                 "最後進價":safe_int(first["進價"], ""),
@@ -1190,9 +1188,8 @@ def create_master_workbook(df, template_bytes, code_by_key, color_map, brand_nam
                 "類別3":summary_number if brand_name == "AG" else "",
                 "類別4":summary_number if brand_name == "AG" else "",
                 "類別5":str(ccode),"尺碼代號":sizecode,
-                "季別":season,"建檔日期":build_date,
-                "備註1":note1,"原廠編號":original,
-                "材質四":first.get("備註2", ""),
+                "季別":season,"建檔日期":optional_date,
+                "備註1":note1,"原廠編號":original,"材質四":first["備註2"],
                 "數量":sum(safe_int(v, 0) or 0 for v in cg["數量"])
             })
     if missing_colors:
@@ -1213,6 +1210,115 @@ def create_master_workbook(df, template_bytes, code_by_key, color_map, brand_nam
     wb.save(bio)
     name=f'{brand_name}商品基本資料-{df.iloc[0]["廠商代碼"]}.xlsx'
     return name,bio.getvalue(),result
+
+
+SHOP_HEADERS_EN = [
+    "Product Handle*","Product Name(English)*","Product Name(Chinese)*","Product Summary(English)","Product Summary(Chinese)",
+    "Product Description(English)","Product Description(Chinese)","SEO Title(English)","SEO Title(Chinese)","SEO Description(English)",
+    "SEO Description(Chinese)","SEO Keywords","Preorder Feature","Preorder Note(English)","Preorder Note(Chinese)",
+    "Unlimited Preorder Supply","Preorder Limit","Online Store Status","Retail Store Status",
+    "Max.12 images for each product (If the Variant Image App is installed, up to 300 main images are supported. Please note that the total character count for all image links must not exceed the Excel cell limit.)*",
+    "Additional Images","Online Store Categories(English)","Online Store Categories(Chinese)","POS Categories(English)",
+    "POS Categories(Chinese)","Price","Sales Price","Product Retail Store Price","Cost","SKU","Member Price","一般會員 Price",
+    "VIP Price","VVIP Price","SVIP Price","Quantity","Weight(KG)","Supplier","Product Tag","Hidden Product",
+    "Exclude Payment Options","Exclude Delivery Options","Specification Name A(English)","Specification Name A(Chinese)",
+    "Specification Name B(English)","Specification Name B(Chinese)","Variation Image","Variation name A(English)",
+    "Variation name A(Chinese)","Variation name B(English)","Variation name B(Chinese)","Variation quantity","Variation price",
+    "Variant Sale Price","Variant Retail Store Price","Variant Member Price","Variant 一般會員 Price","Variant VIP Price",
+    "Variant VVIP Price","Variant SVIP Price","Variant Cost","Variation SKU","Variant Weight(KG)","Barcode"
+]
+SHOP_HEADERS_ZH = [
+    "商品編號*","商品名稱(英文)*","商品名稱(繁體中文)*","商品摘要(英文)","商品摘要(繁體中文)","商品描述(英文)",
+    "商品描述(繁體中文)","SEO標題(英文)","SEO標題(繁體中文)","SEO簡介(英文)","SEO簡介(繁體中文)","SEO關鍵字",
+    "預購功能","預購提示(英文)","預購提示(繁體中文)","預購商品可無限供貨","預購上限","網店上架狀態",
+    "實體店上架狀態","每件商品最多 12 張主要圖片（若有多款式商品圖片擴充功能，則最多 300 張主要圖片。請注意，所有圖片連結的總字數不可超過 Excel 儲存格限制）*",
+    "更多相片 (每件產品最多20張主要圖片， Max.20 images for each product)","網店分類(英文)","網店分類(繁體中文)",
+    "POS分類(英文)","POS分類(繁體中文)","原價格","特價","實體店價格","成本價","商品貨號","商品會員價",
+    "一般會員價","VIP價","VVIP價","SVIP價","數量","重量(KG)","供應商","商品管理標籤","隱藏商品",
+    "排除的付款方式","排除的送貨方式","規格名稱1(英文)","規格名稱1(繁體中文)","規格名稱2(英文)",
+    "規格名稱2(繁體中文)","款式圖片 (每個款式最多 1 張款式圖片， Max.1 image for each variant)","選項名稱A(英文)",
+    "選項名稱A(繁體中文)","選項名稱B(英文)","選項名稱B(繁體中文)","選項數量","選項價格","款式特價",
+    "款式實體店價格","款式會員價","款式一般會員價","款式VIP價","款式VVIP價","款式SVIP價","款式成本",
+    "選項商品貨號","款式重量(KG)","商品條碼編號"
+]
+
+def create_shopline_workbook(df, code_by_key, color_map, classifications, supplier, product_tag, price_overrides):
+    """建立 AN 專用 SHOPLINE 商品大量匯入檔。"""
+    from openpyxl import Workbook
+    from openpyxl.styles import Font, PatternFill, Alignment
+
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Bulk Import Products"
+    ws.append(SHOP_HEADERS_EN)
+    ws.append(SHOP_HEADERS_ZH)
+    for cell in ws[1]:
+        cell.font = Font(bold=True, color="FFFFFF")
+        cell.fill = PatternFill("solid", fgColor="4472C4")
+        cell.alignment = Alignment(wrap_text=True, vertical="center")
+    for cell in ws[2]:
+        cell.font = Font(bold=True)
+        cell.fill = PatternFill("solid", fgColor="D9EAF7")
+        cell.alignment = Alignment(wrap_text=True, vertical="center")
+    ws.freeze_panes = "A3"
+    ws.row_dimensions[1].height = 48
+    ws.row_dimensions[2].height = 42
+
+    out_rows=[]
+    for (vendor_code, original), group in df.groupby(["廠商代碼","原廠編號"], sort=False):
+        key=f"{vendor_code}|{original}"
+        base=str(code_by_key[key])
+        first=group.iloc[0]
+        category_choice=classifications.get(key, str(first.get("類別","")).strip())
+        if category_choice not in SHOP_CLASSIFICATIONS:
+            raise ValueError(f"款式 {original} 尚未選擇 SHOP 分類。")
+        online_category,pos_category=SHOP_CLASSIFICATIONS[category_choice]
+        price=safe_int(first.get("售價"), None)
+        cost=safe_int(first.get("進價"), None)
+        if price is None:
+            raise ValueError(f"款式 {original} 沒有售價。")
+        vip_prices=SHOP_MEMBER_PRICES.get(price) or price_overrides.get(price)
+        if not vip_prices or any(safe_int(v,0)<=0 for v in vip_prices):
+            raise ValueError(f"售價 {price} 不在售價對照表，請先填寫 VIP／VVIP／SVIP 價格。")
+        vip,vvip,svip=map(int,vip_prices)
+        first_variant=True
+        for _,r in group.iterrows():
+            color=normalize_color(r.get("顏色",""))
+            size=str(r.get("尺寸","") or "").strip().upper()
+            color_code=str(color_map.get(color,"")).zfill(2)
+            if not re.fullmatch(r"\d{2}",color_code):
+                raise ValueError(f"顏色「{color}」沒有2碼顏色代號。")
+            barcode=f"{base}{color_code}{size}"
+            row=[None]*64
+            row[0]=base; row[2]=base
+            row[18]="Y" if first_variant else None
+            row[19]=SHOP_PUBLIC_IMAGE if first_variant else None
+            row[22]=online_category if first_variant else None
+            row[24]=pos_category if first_variant else None
+            row[25]=price; row[27]=price; row[28]=cost
+            row[29]=base if first_variant else None
+            row[32]=vip; row[33]=vvip; row[34]=svip
+            row[37]=supplier if first_variant else None
+            row[38]=product_tag if first_variant else None
+            row[43]="顏色"; row[45]="尺寸"
+            row[48]=color; row[50]=size
+            row[51]=safe_int(r.get("數量"),0)
+            row[52]=price; row[54]=price
+            row[57]=vip; row[58]=vvip; row[59]=svip
+            row[60]=cost; row[61]=base; row[63]=barcode
+            out_rows.append(row)
+            first_variant=False
+    for row in out_rows:
+        ws.append(row)
+    for col in (1,3,30,62,64):
+        for row in range(3,ws.max_row+1): ws.cell(row,col).number_format="@"
+    for col in range(1,65):
+        ws.column_dimensions[ws.cell(1,col).column_letter].width = 18
+    ws.column_dimensions["T"].width=38
+    ws.column_dimensions["U"].width=26
+    ws.auto_filter.ref=f"A2:BL{ws.max_row}"
+    bio=io.BytesIO(); wb.save(bio)
+    return "AN-SHOPLINE商品匯入.xlsx",bio.getvalue(),pd.DataFrame(out_rows,columns=SHOP_HEADERS_ZH)
 
 
 # -------------------------
@@ -1520,22 +1626,14 @@ if st.button("🔍 開始 OCR 辨識",type="primary",disabled=not images):
 
 if st.session_state.ocr_df is not None:
     st.header("② 確認／修改資料")
-    st.info("可以直接點表格修改。備註1、備註2皆為選填，可保持空白；新廠商請填入『廠商名稱＋廠商代碼』，產生後會自動永久保存。")
+    st.info("可以直接點表格修改。新廠商請填入『廠商名稱＋廠商代碼』，產生後會自動永久保存。")
     edited=st.data_editor(
         st.session_state.ocr_df.drop(columns=["OCR文字"],errors="ignore"),
         num_rows="dynamic",
         use_container_width=True,
-        column_config={
-            "備註1": st.column_config.TextColumn("備註1（選填）", required=False),
-            "備註2": st.column_config.TextColumn("備註2（選填）", required=False),
-        },
         key="editor"
     )
     edited=edited.copy()
-    for optional_note in ["備註1", "備註2"]:
-        if optional_note not in edited.columns:
-            edited[optional_note] = ""
-        edited[optional_note] = edited[optional_note].fillna("")
 
     # 目前畫面上的人工修改就是最終資料來源
     edited = mark_manual_edits_as_final(edited)
@@ -1654,33 +1752,63 @@ if st.session_state.ocr_df is not None:
 
     a,b,c,d=st.columns(4)
     if brand == "AN":
-        brand_code="6"
-        output_brand_code="006"
-        with a: st.text_input("採購單品牌代碼",value=output_brand_code,disabled=True,key="AN_brand_code")
+        with a: brand_code=st.text_input("品牌代碼",value="6",key="AN_brand_code")
         with b: season=st.text_input("季別",key="AN_season")
         with c: custom_code=st.text_input("8碼貨號第3～5碼",max_chars=3,placeholder="例如 813",key="AN_custom")
     elif brand == "AG":
         with a: season=st.radio("季別／第1碼",["春夏","秋冬"],horizontal=True,key="AG_season")
         brand_code="5" if season=="春夏" else "9"
-        output_brand_code="008"
         with b: st.text_input("第1碼",value=brand_code,disabled=True,key="AG_brand_digit")
         with c: custom_code=st.text_input("13碼第7～8碼（整批共用）",max_chars=2,placeholder="例如 23",key="AG_custom")
     else:
-        brand_code="3"
-        output_brand_code="011"
-        with a: st.text_input("採購單品牌代碼",value=output_brand_code,disabled=True,key="JB_brand_code")
+        with a: brand_code=st.text_input("品牌代碼／第1碼",value="3",max_chars=1,key="JB_brand_digit")
         with b: season=st.text_input("季別",key="JB_season")
         with c: custom_code=st.text_input("8碼第7～8碼（整批共用）",max_chars=2,placeholder="例如 23",key="JB_custom")
-    default_build_date = datetime.now(ZoneInfo("Asia/Taipei")).strftime("%Y%m%d")
-    with d:
-        optional_date=st.text_input(
-            "建檔日期（YYYYMMDD）",
-            value=default_build_date,
-            max_chars=8,
-            placeholder="例如 20260825",
-            key=f"{brand}_date",
-        ).strip()
+    with d: optional_date=st.text_input("日期（選填）",placeholder="例如 8/24",key=f"{brand}_date")
     optional_page=st.text_input("頁數（選填）",key=f"{brand}_page")
+
+    shop_classifications = {}
+    shop_price_overrides = {}
+    shop_supplier = ""
+    shop_product_tag = ""
+    if brand == "AN":
+        st.subheader("SHOPLINE 匯入設定")
+        sc1,sc2=st.columns(2)
+        with sc1:
+            shop_supplier=st.text_input("供應商（本批輸入一次）",key="AN_shop_supplier")
+        with sc2:
+            shop_product_tag=st.text_input("商品管理標籤（本批輸入一次）",key="AN_shop_tag")
+
+        st.caption("下身商品請逐款單選分類；同款所有顏色與尺寸會一起套用。")
+        for n,((vendor_code,original),g) in enumerate(
+            edited.groupby(["廠商代碼","原廠編號"],sort=False),1
+        ):
+            key=f"{vendor_code}|{original}"
+            system_category=str(g.iloc[0].get("類別","")).strip()
+            if system_category in ("褲子","裙子"):
+                choices=["短褲","長褲","短裙","長裙"]
+                default_index=0 if system_category=="褲子" else 2
+                shop_classifications[key]=st.radio(
+                    f"款式 {original}｜下身分類",
+                    choices,index=default_index,horizontal=True,
+                    key=f"AN_shop_class_{n}_{vendor_code}_{original}"
+                )
+            else:
+                shop_classifications[key]=system_category
+
+        missing_shop_prices=[]
+        for value in edited.get("售價",pd.Series(dtype=object)).tolist():
+            price=safe_int(value,None)
+            if price is not None and price not in SHOP_MEMBER_PRICES and price not in missing_shop_prices:
+                missing_shop_prices.append(price)
+        if missing_shop_prices:
+            st.warning("以下售價不在 SHOP 售價表，請自行輸入會員價：")
+            for price in missing_shop_prices:
+                pc1,pc2,pc3=st.columns(3)
+                with pc1: vip=st.number_input(f"售價 {price}｜VIP",min_value=0,step=1,key=f"shop_vip_{price}")
+                with pc2: vvip=st.number_input(f"售價 {price}｜VVIP",min_value=0,step=1,key=f"shop_vvip_{price}")
+                with pc3: svip=st.number_input(f"售價 {price}｜SVIP",min_value=0,step=1,key=f"shop_svip_{price}")
+                shop_price_overrides[price]=(vip,vvip,svip)
 
     batch_categories = []
     manual_starts = {}
@@ -1804,12 +1932,10 @@ if st.session_state.ocr_df is not None:
             pass
 
     st.header("③ 產生採購單")
-    if st.button("✅ 產生採購單＋商品基本資料",type="primary"):
+    generate_label="✅ 產生採購單＋商品基本資料＋SHOPLINE匯入檔" if brand=="AN" else "✅ 產生採購單＋商品基本資料"
+    if st.button(generate_label,type="primary"):
         try:
-            if not re.fullmatch(r"\d{8}", optional_date or ""):
-                raise ValueError("建檔日期必須是8位數字，格式為 YYYYMMDD，例如 20260825。")
-            # 備註1、備註2皆為選填；照片沒有資料時不阻擋產出。
-            required=["廠商","廠商代碼","原廠編號","類別代碼","類別","顏色","尺寸","進價","售價","數量"]
+            required=["廠商","廠商代碼","原廠編號","類別代碼","類別","顏色","尺寸","進價","售價","數量","備註2"]
             if brand == "AG":
                 required.append("摘要")
             problems=[]
@@ -1846,17 +1972,30 @@ if st.session_state.ocr_df is not None:
                 )
 
             purchase_outputs=create_purchase_workbooks(
-                final_df,config_bytes["purchase_template"],brand,output_brand_code,optional_date,optional_page
+                final_df,config_bytes["purchase_template"],brand,brand_code,optional_date,optional_page
             )
             master_name,master_bytes,master_df=create_master_workbook(
                 final_df,config_bytes["master_template"],code_by_key,live_color_map,
-                brand,output_brand_code,season,optional_date
+                brand,brand_code,season,optional_date
             )
+
+            shop_name=shop_bytes=shop_df=None
+            if brand == "AN":
+                if not shop_supplier.strip():
+                    raise ValueError("請輸入 SHOPLINE 供應商。")
+                if not shop_product_tag.strip():
+                    raise ValueError("請輸入 SHOPLINE 商品管理標籤。")
+                shop_name,shop_bytes,shop_df=create_shopline_workbook(
+                    final_df,code_by_key,live_color_map,shop_classifications,
+                    shop_supplier.strip(),shop_product_tag.strip(),shop_price_overrides
+                )
 
             zbio=io.BytesIO()
             with zipfile.ZipFile(zbio,"w",zipfile.ZIP_DEFLATED) as z:
                 for name,data in purchase_outputs.items(): z.writestr(name,data)
                 z.writestr(master_name,master_bytes)
+                if shop_name and shop_bytes:
+                    z.writestr(shop_name,shop_bytes)
             st.session_state.generated_zip=zbio.getvalue()
 
             # 永久保存流水號
@@ -1891,6 +2030,10 @@ if st.session_state.ocr_df is not None:
 
             st.subheader("商品基本資料預覽")
             st.dataframe(master_df,use_container_width=True)
+            if brand == "AN" and shop_df is not None:
+                st.subheader("SHOPLINE 匯入資料預覽")
+                shop_preview=["商品編號*","商品名稱(繁體中文)*","網店分類(繁體中文)","POS分類(繁體中文)","選項名稱A(繁體中文)","選項名稱B(繁體中文)","選項數量","商品條碼編號"]
+                st.dataframe(shop_df[shop_preview],use_container_width=True,hide_index=True)
         except Exception as e:
             st.error(f"無法產生：{e}")
 
