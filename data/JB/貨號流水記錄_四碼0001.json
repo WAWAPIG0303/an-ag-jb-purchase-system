@@ -457,6 +457,33 @@
       "brand_code": "3",
       "vendor_code": "C72",
       "original": "369"
+    },
+    "959|7890": {
+      "base8": "38001862",
+      "sequence": 18,
+      "category": "套裝",
+      "category_code": "8",
+      "brand_code": "3",
+      "vendor_code": "959",
+      "original": "7890"
+    },
+    "959|5651": {
+      "base8": "36001662",
+      "sequence": 16,
+      "category": "外套",
+      "category_code": "6",
+      "brand_code": "3",
+      "vendor_code": "959",
+      "original": "5651"
+    },
+    "959|26637": {
+      "base8": "38001962",
+      "sequence": 19,
+      "category": "套裝",
+      "category_code": "8",
+      "brand_code": "3",
+      "vendor_code": "959",
+      "original": "26637"
     }
   },
   "next_sequence_by_category": {
@@ -465,8 +492,8 @@
     "2": 1,
     "3": 1,
     "4": 16,
-    "6": 16,
+    "6": 17,
     "7": 1,
-    "8": 18
+    "8": 20
   }
 }
