@@ -421,6 +421,24 @@
       "brand_code": "3",
       "vendor_code": "C70",
       "original": "0628"
+    },
+    "C71|8871": {
+      "base8": "36001462",
+      "sequence": 14,
+      "category": "外套",
+      "category_code": "6",
+      "brand_code": "3",
+      "vendor_code": "C71",
+      "original": "8871"
+    },
+    "C71|8816": {
+      "base8": "36001562",
+      "sequence": 15,
+      "category": "外套",
+      "category_code": "6",
+      "brand_code": "3",
+      "vendor_code": "C71",
+      "original": "8816"
     }
   },
   "next_sequence_by_category": {
@@ -429,7 +447,7 @@
     "2": 1,
     "3": 1,
     "4": 16,
-    "6": 14,
+    "6": 16,
     "7": 1,
     "8": 18
   }
