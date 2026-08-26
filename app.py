@@ -16,6 +16,9 @@ BRAND_OPTIONS = {
     "AG": "AG｜13碼完整貨號",
     "JB": "JB｜8碼主貨號",
 }
+
+# 採購單／商品基本資料使用的三位品牌編號（與貨號第1碼分開）
+BRAND_MASTER_CODES = {"AN": "006", "AG": "008", "JB": "011"}
 brand = st.sidebar.radio(
     "選擇品牌",
     list(BRAND_OPTIONS),
@@ -1173,7 +1176,7 @@ def create_master_workbook(df, template_bytes, code_by_key, color_map, brand_nam
             photo_price = safe_int(first.get("售價"), "")
             master_price = photo_price * 2 if brand_name == "JB" and isinstance(photo_price, int) else photo_price
             special_price = master_price if brand_name == "JB" else ""
-            note1 = f"特價{photo_price}" if brand_name == "JB" and isinstance(photo_price, int) else ""
+            note1 = f"特價{master_price}" if brand_name == "JB" and isinstance(master_price, int) else ""
             records.append({
                 "商品型號":product_code,
                 "品名規格":product_code+cname if brand_name == "AG" else base+cname,
@@ -1242,27 +1245,40 @@ SHOP_HEADERS_ZH = [
     "選項商品貨號","款式重量(KG)","商品條碼編號"
 ]
 
-def create_shopline_workbook(df, code_by_key, color_map, classifications, supplier, product_tag, price_overrides):
-    """建立 AN 專用 SHOPLINE 商品大量匯入檔。"""
+def create_shopline_workbook(df, code_by_key, color_map, classifications, supplier, product_tag, price_overrides, template_bytes=None):
+    """建立 AN 專用 SHOPLINE 商品大量匯入檔；若有上傳 SHOP.xlsx，沿用該範本。"""
     from openpyxl import Workbook
     from openpyxl.styles import Font, PatternFill, Alignment
 
-    wb = Workbook()
-    ws = wb.active
-    ws.title = "Bulk Import Products"
-    ws.append(SHOP_HEADERS_EN)
-    ws.append(SHOP_HEADERS_ZH)
-    for cell in ws[1]:
-        cell.font = Font(bold=True, color="FFFFFF")
-        cell.fill = PatternFill("solid", fgColor="4472C4")
-        cell.alignment = Alignment(wrap_text=True, vertical="center")
-    for cell in ws[2]:
-        cell.font = Font(bold=True)
-        cell.fill = PatternFill("solid", fgColor="D9EAF7")
-        cell.alignment = Alignment(wrap_text=True, vertical="center")
-    ws.freeze_panes = "A3"
-    ws.row_dimensions[1].height = 48
-    ws.row_dimensions[2].height = 42
+    if template_bytes:
+        wb = load_workbook(io.BytesIO(template_bytes))
+        ws = wb["Bulk Import Products"] if "Bulk Import Products" in wb.sheetnames else wb.active
+        # SHOP.xlsx 只保留前兩列標題／格式，舊商品資料清空後重新帶入。
+        if ws.max_row > 2:
+            ws.delete_rows(3, ws.max_row - 2)
+        # 若範本標題不完整，補回標準兩列，避免欄位錯位。
+        zh_headers = [str(ws.cell(2, c).value or "").strip() for c in range(1, 65)]
+        if len(zh_headers) < 64 or zh_headers[0] != SHOP_HEADERS_ZH[0]:
+            ws.delete_rows(1, ws.max_row)
+            ws.append(SHOP_HEADERS_EN)
+            ws.append(SHOP_HEADERS_ZH)
+    else:
+        wb = Workbook()
+        ws = wb.active
+        ws.title = "Bulk Import Products"
+        ws.append(SHOP_HEADERS_EN)
+        ws.append(SHOP_HEADERS_ZH)
+        for cell in ws[1]:
+            cell.font = Font(bold=True, color="FFFFFF")
+            cell.fill = PatternFill("solid", fgColor="4472C4")
+            cell.alignment = Alignment(wrap_text=True, vertical="center")
+        for cell in ws[2]:
+            cell.font = Font(bold=True)
+            cell.fill = PatternFill("solid", fgColor="D9EAF7")
+            cell.alignment = Alignment(wrap_text=True, vertical="center")
+        ws.freeze_panes = "A3"
+        ws.row_dimensions[1].height = 48
+        ws.row_dimensions[2].height = 42
 
     out_rows=[]
     for (vendor_code, original), group in df.groupby(["廠商代碼","原廠編號"], sort=False):
@@ -1290,7 +1306,10 @@ def create_shopline_workbook(df, code_by_key, color_map, classifications, suppli
                 raise ValueError(f"顏色「{color}」沒有2碼顏色代號。")
             barcode=f"{base}{color_code}{size}"
             row=[None]*64
-            row[0]=base; row[2]=base
+            # 商品編號、中文商品名稱、商品貨號、選項商品貨號均使用 AN 8碼主貨號；英文名稱留白。
+            row[0]=base
+            row[1]=None
+            row[2]=base
             row[18]="Y" if first_variant else None
             row[19]=SHOP_PUBLIC_IMAGE if first_variant else None
             row[22]=online_category if first_variant else None
@@ -1308,14 +1327,18 @@ def create_shopline_workbook(df, code_by_key, color_map, classifications, suppli
             row[60]=cost; row[61]=base; row[63]=barcode
             out_rows.append(row)
             first_variant=False
+
     for row in out_rows:
         ws.append(row)
     for col in (1,3,30,62,64):
-        for row in range(3,ws.max_row+1): ws.cell(row,col).number_format="@"
-    for col in range(1,65):
-        ws.column_dimensions[ws.cell(1,col).column_letter].width = 18
-    ws.column_dimensions["T"].width=38
-    ws.column_dimensions["U"].width=26
+        for row_no in range(3,ws.max_row+1):
+            ws.cell(row_no,col).number_format="@"
+    if not template_bytes:
+        for col in range(1,65):
+            ws.column_dimensions[ws.cell(1,col).column_letter].width = 18
+        ws.column_dimensions["T"].width=38
+        ws.column_dimensions["U"].width=26
+    ws.freeze_panes = ws.freeze_panes or "A3"
     ws.auto_filter.ref=f"A2:BL{ws.max_row}"
     bio=io.BytesIO(); wb.save(bio)
     return "AN-SHOPLINE商品匯入.xlsx",bio.getvalue(),pd.DataFrame(out_rows,columns=SHOP_HEADERS_ZH)
@@ -1751,28 +1774,40 @@ if st.session_state.ocr_df is not None:
             edited.loc[idx_list, "摘要"] = value
 
     a,b,c,d=st.columns(4)
+    brand_code = BRAND_MASTER_CODES[brand]
+    item_brand_digit = ""
     if brand == "AN":
-        with a: brand_code=st.text_input("品牌代碼",value="6",key="AN_brand_code")
+        item_brand_digit = "6"
+        with a: st.text_input("品牌編號",value=brand_code,disabled=True,key="AN_brand_code")
         with b: season=st.text_input("季別",key="AN_season")
         with c: custom_code=st.text_input("8碼貨號第3～5碼",max_chars=3,placeholder="例如 813",key="AN_custom")
     elif brand == "AG":
-        with a: season=st.radio("季別／第1碼",["春夏","秋冬"],horizontal=True,key="AG_season")
-        brand_code="5" if season=="春夏" else "9"
-        with b: st.text_input("第1碼",value=brand_code,disabled=True,key="AG_brand_digit")
+        with a: season=st.radio("季別／貨號第1碼",["春夏","秋冬"],horizontal=True,key="AG_season")
+        item_brand_digit="5" if season=="春夏" else "9"
+        with b: st.text_input("貨號第1碼",value=item_brand_digit,disabled=True,key="AG_brand_digit")
         with c: custom_code=st.text_input("13碼第7～8碼（整批共用）",max_chars=2,placeholder="例如 23",key="AG_custom")
     else:
-        with a: brand_code=st.text_input("品牌代碼／第1碼",value="3",max_chars=1,key="JB_brand_digit")
+        with a: item_brand_digit=st.text_input("貨號第1碼",value="3",max_chars=1,key="JB_brand_digit")
         with b: season=st.text_input("季別",key="JB_season")
         with c: custom_code=st.text_input("8碼第7～8碼（整批共用）",max_chars=2,placeholder="例如 23",key="JB_custom")
-    with d: optional_date=st.text_input("日期（選填）",placeholder="例如 8/24",key=f"{brand}_date")
+    with d: optional_date=st.text_input("建檔日期（8碼）",placeholder="例如 20260826",key=f"{brand}_date")
+    st.caption(f"採購單／商品基本資料品牌編號：{brand_code}")
     optional_page=st.text_input("頁數（選填）",key=f"{brand}_page")
 
     shop_classifications = {}
     shop_price_overrides = {}
     shop_supplier = ""
     shop_product_tag = ""
+    shop_template_bytes = None
     if brand == "AN":
         st.subheader("SHOPLINE 匯入設定")
+        shop_template_file = st.file_uploader(
+            "SHOP.xlsx 範本（可選；上傳後會直接沿用這份表格格式）",
+            type=["xlsx"], key="AN_shop_template"
+        )
+        if shop_template_file is not None:
+            shop_template_bytes = shop_template_file.getvalue()
+            st.success(f"已載入 SHOP 範本：{shop_template_file.name}")
         sc1,sc2=st.columns(2)
         with sc1:
             shop_supplier=st.text_input("供應商（本批輸入一次）",key="AN_shop_supplier")
@@ -1935,7 +1970,7 @@ if st.session_state.ocr_df is not None:
     generate_label="✅ 產生採購單＋商品基本資料＋SHOPLINE匯入檔" if brand=="AN" else "✅ 產生採購單＋商品基本資料"
     if st.button(generate_label,type="primary"):
         try:
-            required=["廠商","廠商代碼","原廠編號","類別代碼","類別","顏色","尺寸","進價","售價","數量","備註2"]
+            required=["廠商","廠商代碼","原廠編號","類別代碼","類別","顏色","尺寸","進價","售價","數量"]
             if brand == "AG":
                 required.append("摘要")
             problems=[]
@@ -1947,7 +1982,7 @@ if st.session_state.ocr_df is not None:
                 raise ValueError("AN 8碼貨號第3～5碼必須輸入3位數字。")
             if brand in ("AG", "JB") and not re.fullmatch(r"\d{2}",custom_code or ""):
                 raise ValueError(f"{brand} 第7～8碼必須輸入2位數字。")
-            if brand == "JB" and not re.fullmatch(r"\d",brand_code or ""):
+            if brand == "JB" and not re.fullmatch(r"\d",item_brand_digit or ""):
                 raise ValueError("JB 品牌代碼／第1碼必須輸入1位數字。")
             # 人工確認資料優先：產生前固定使用目前畫面 edited
             confirmed_df = mark_manual_edits_as_final(edited)
@@ -1964,11 +1999,11 @@ if st.session_state.ocr_df is not None:
                 )
             elif brand == "AG":
                 final_df,working,code_by_key,statuses=assign_ag_codes(
-                    confirmed_df,ledger,brand_code,custom_code,seq_mode,manual_starts,live_color_map
+                    confirmed_df,ledger,item_brand_digit,custom_code,seq_mode,manual_starts,live_color_map
                 )
             else:
                 final_df,working,code_by_key,statuses=assign_jb_codes(
-                    confirmed_df,ledger,brand_code,custom_code,seq_mode,jb_manual_sequences
+                    confirmed_df,ledger,item_brand_digit,custom_code,seq_mode,jb_manual_sequences
                 )
 
             purchase_outputs=create_purchase_workbooks(
@@ -1987,7 +2022,7 @@ if st.session_state.ocr_df is not None:
                     raise ValueError("請輸入 SHOPLINE 商品管理標籤。")
                 shop_name,shop_bytes,shop_df=create_shopline_workbook(
                     final_df,code_by_key,live_color_map,shop_classifications,
-                    shop_supplier.strip(),shop_product_tag.strip(),shop_price_overrides
+                    shop_supplier.strip(),shop_product_tag.strip(),shop_price_overrides,shop_template_bytes
                 )
 
             zbio=io.BytesIO()
