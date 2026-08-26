@@ -1442,7 +1442,7 @@ def github_ready():
 # -------------------------
 # Session state
 # -------------------------
-for k,v in {"ocr_df":None,"generated_zip":None}.items():
+for k,v in {"ocr_df":None,"generated_zip":None,"shop_only_bytes":None}.items():
     if k not in st.session_state:
         st.session_state[k]=v
 
@@ -1626,6 +1626,152 @@ def mark_manual_edits_as_final(df):
         out["資料來源"] = ""
     out["資料來源"] = out["資料來源"].replace("", "人工確認")
     return out
+
+
+def read_completed_an_purchase_files(files):
+    """讀取已完成的 AN 採購單；只沿用既有資料，不重新編號或寫入流水號。"""
+    rows = []
+    code_by_key = {}
+    source_names = []
+    required = ["原廠編號", "貨號", "類別", "顏色", "尺寸", "進價", "售價", "數量"]
+
+    for uploaded in files:
+        source_names.append(uploaded.name)
+        wb = load_workbook(io.BytesIO(uploaded.getvalue()), data_only=True)
+        ws = wb["Sheet2"] if "Sheet2" in wb.sheetnames else wb.active
+        header_row = None
+        headers = {}
+        for rn in range(1, min(ws.max_row, 12) + 1):
+            candidate = {
+                str(ws.cell(rn, c).value or "").strip(): c
+                for c in range(1, ws.max_column + 1)
+                if str(ws.cell(rn, c).value or "").strip()
+            }
+            if "原廠編號" in candidate and "貨號" in candidate:
+                header_row, headers = rn, candidate
+                break
+        if header_row is None:
+            raise ValueError(f"{uploaded.name} 找不到『原廠編號／貨號』標題，請確認是系統產出的 AN 採購單。")
+
+        missing = [h for h in required if h not in headers]
+        if missing:
+            raise ValueError(f"{uploaded.name} 缺少欄位：{'、'.join(missing)}")
+
+        top_text = " ".join(
+            str(ws.cell(r, c).value or "")
+            for r in range(1, header_row)
+            for c in range(1, ws.max_column + 1)
+        )
+        vendor_match = re.search(r"廠商\s*[:：]\s*(.*?)\s+廠代\s*[:：]\s*([^\s]+)", top_text)
+        vendor = vendor_match.group(1).strip() if vendor_match else ""
+        vendor_code = vendor_match.group(2).strip() if vendor_match else ""
+
+        for rn in range(header_row + 1, ws.max_row + 1):
+            original = str(ws.cell(rn, headers["原廠編號"]).value or "").strip()
+            base = str(ws.cell(rn, headers["貨號"]).value or "").strip()
+            if not original and not base:
+                continue
+            if not re.fullmatch(r"\d{8}", base):
+                raise ValueError(f"{uploaded.name} 第 {rn} 列貨號「{base}」不是 8 碼。")
+            key = f"{vendor_code}|{original}"
+            if key in code_by_key and code_by_key[key] != base:
+                raise ValueError(f"{uploaded.name} 款式 {original} 出現不同貨號。")
+            code_by_key[key] = base
+            row = {h: ws.cell(rn, headers[h]).value for h in required}
+            row.update({"廠商": vendor, "廠商代碼": vendor_code, "來源檔案": uploaded.name})
+            rows.append(row)
+
+    if not rows:
+        raise ValueError("上傳的採購單沒有商品資料。")
+    df = pd.DataFrame(rows)
+    for col in ["進價", "售價", "數量"]:
+        df[col] = df[col].map(lambda v: safe_int(v, None))
+    return df, code_by_key, source_names
+
+
+def render_shopline_only_mode():
+    st.header("只轉 SHOPLINE（不跑照片、不重新編貨號）")
+    st.info("可一次上傳多個已完成的 AN 採購單；原貨號、顏色、尺寸、數量、售價與成本會直接沿用，也不會更新永久流水號。")
+    files = st.file_uploader(
+        "上傳已完成的 AN 採購單 Excel",
+        type=["xlsx"], accept_multiple_files=True, key="shop_only_purchase_files"
+    )
+    if not files:
+        return
+    try:
+        df, existing_codes, source_names = read_completed_an_purchase_files(files)
+        st.success(f"已讀取 {len(source_names)} 個採購單，共 {len(df)} 筆顏色／尺寸資料。")
+        st.dataframe(df[["來源檔案","原廠編號","貨號","類別","顏色","尺寸","數量","售價","進價"]], use_container_width=True, hide_index=True)
+
+        template = st.file_uploader("SHOP.xlsx 範本（可選）", type=["xlsx"], key="shop_only_template")
+        c1, c2 = st.columns(2)
+        with c1:
+            supplier = st.text_input("供應商（輸入一次，套用全部）", key="shop_only_supplier")
+        with c2:
+            product_tag = st.text_input("商品管理標籤（輸入一次，套用全部）", key="shop_only_tag")
+
+        classifications = {}
+        st.caption("只有褲子／裙子需要勾選細分類；其他類別會自動帶入。")
+        for n, ((vendor_code, original), group) in enumerate(df.groupby(["廠商代碼","原廠編號"], sort=False), 1):
+            key = f"{vendor_code}|{original}"
+            category = str(group.iloc[0]["類別"] or "").strip()
+            if category in ("褲子", "裙子"):
+                choices = ["短褲", "長褲", "短裙", "長裙"]
+                classifications[key] = st.radio(
+                    f"貨號 {existing_codes[key]}｜款式 {original}", choices,
+                    index=0 if category == "褲子" else 2, horizontal=True,
+                    key=f"shop_only_class_{n}_{vendor_code}_{original}"
+                )
+            else:
+                classifications[key] = category
+
+        price_overrides = {}
+        missing_prices = sorted({
+            p for p in (safe_int(v, None) for v in df["售價"].tolist())
+            if p is not None and p not in SHOP_MEMBER_PRICES
+        })
+        if missing_prices:
+            st.warning("以下售價不在會員價對照表，請補上價格：")
+            for price in missing_prices:
+                p1, p2, p3 = st.columns(3)
+                with p1: vip = st.number_input(f"售價 {price}｜VIP", min_value=0, step=1, key=f"shop_only_vip_{price}")
+                with p2: vvip = st.number_input(f"售價 {price}｜VVIP", min_value=0, step=1, key=f"shop_only_vvip_{price}")
+                with p3: svip = st.number_input(f"售價 {price}｜SVIP", min_value=0, step=1, key=f"shop_only_svip_{price}")
+                price_overrides[price] = (vip, vvip, svip)
+
+        if st.button("✅ 單獨產生 SHOPLINE 匯入檔", type="primary", key="shop_only_generate"):
+            if not supplier.strip():
+                raise ValueError("請輸入供應商。")
+            if not product_tag.strip():
+                raise ValueError("請輸入商品管理標籤。")
+            _, output, preview = create_shopline_workbook(
+                df, existing_codes, color_map, classifications,
+                supplier.strip(), product_tag.strip(), price_overrides,
+                template.getvalue() if template else None
+            )
+            st.session_state.shop_only_bytes = output
+            st.success("SHOPLINE 匯入檔已完成；既有貨號與永久流水號都沒有變更。")
+            st.dataframe(preview, use_container_width=True, hide_index=True)
+    except Exception as e:
+        st.error(f"無法轉換：{e}")
+
+    if st.session_state.shop_only_bytes:
+        st.download_button(
+            "⬇️ 下載 SHOPLINE 匯入檔", st.session_state.shop_only_bytes,
+            file_name="AN-SHOPLINE商品匯入.xlsx",
+            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            type="primary", key="shop_only_download"
+        )
+
+
+operation_mode = "建立新採購資料"
+if brand == "AN":
+    operation_mode = st.sidebar.radio(
+        "操作方式", ["建立新採購資料", "只轉 SHOPLINE"], key="AN_operation_mode"
+    )
+if operation_mode == "只轉 SHOPLINE":
+    render_shopline_only_mode()
+    st.stop()
 
 # -------------------------
 # 日常操作：只上傳照片
