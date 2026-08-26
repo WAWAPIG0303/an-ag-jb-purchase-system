@@ -385,6 +385,42 @@
       "brand_code": "3",
       "vendor_code": "C69",
       "original": "6628-下"
+    },
+    "C70|0625": {
+      "base8": "34001262",
+      "sequence": 12,
+      "category": "褲子",
+      "category_code": "4",
+      "brand_code": "3",
+      "vendor_code": "C70",
+      "original": "0625"
+    },
+    "C70|8812": {
+      "base8": "34001362",
+      "sequence": 13,
+      "category": "褲子",
+      "category_code": "4",
+      "brand_code": "3",
+      "vendor_code": "C70",
+      "original": "8812"
+    },
+    "C70|1812": {
+      "base8": "34001462",
+      "sequence": 14,
+      "category": "褲子",
+      "category_code": "4",
+      "brand_code": "3",
+      "vendor_code": "C70",
+      "original": "1812"
+    },
+    "C70|0628": {
+      "base8": "34001562",
+      "sequence": 15,
+      "category": "褲子",
+      "category_code": "4",
+      "brand_code": "3",
+      "vendor_code": "C70",
+      "original": "0628"
     }
   },
   "next_sequence_by_category": {
@@ -392,7 +428,7 @@
     "1": 32,
     "2": 1,
     "3": 1,
-    "4": 12,
+    "4": 16,
     "6": 14,
     "7": 1,
     "8": 18
