@@ -1763,15 +1763,20 @@ if st.session_state.ocr_df is not None:
         with b: season=st.text_input("季別",key="AN_season")
         with c: custom_code=st.text_input("8碼貨號第3～5碼",max_chars=3,placeholder="例如 813",key="AN_custom")
     elif brand == "AG":
-        with a: season=st.radio("季別／第1碼",["春夏","秋冬"],horizontal=True,key="AG_season")
-        brand_code="5" if season=="春夏" else "9"
-        with b: st.text_input("第1碼",value=brand_code,disabled=True,key="AG_brand_digit")
+        with a: ag_period=st.radio("貨號第1碼",["春夏｜5","秋冬｜9"],horizontal=True,key="AG_period")
+        ag_code_digit="5" if ag_period.startswith("春夏") else "9"
+        brand_code="008"
+        with b: st.text_input("品牌代碼",value=brand_code,disabled=True,key="AG_brand_code")
         with c: custom_code=st.text_input("13碼第7～8碼（整批共用）",max_chars=2,placeholder="例如 23",key="AG_custom")
+        with d: season=st.text_input("季別（自行輸入）",key="AG_season")
     else:
         with a: brand_code=st.text_input("品牌代碼／第1碼",value="3",max_chars=1,key="JB_brand_digit")
         with b: season=st.text_input("季別",key="JB_season")
         with c: custom_code=st.text_input("8碼第7～8碼（整批共用）",max_chars=2,placeholder="例如 23",key="JB_custom")
-    with d: optional_date=st.text_input("日期（選填）",placeholder="例如 8/24",key=f"{brand}_date")
+    if brand == "AG":
+        optional_date=st.text_input("日期（選填）",placeholder="例如 8/24",key="AG_date")
+    else:
+        with d: optional_date=st.text_input("日期（選填）",placeholder="例如 8/24",key=f"{brand}_date")
     optional_page=st.text_input("頁數（選填）",key=f"{brand}_page")
 
     shop_classifications = {}
@@ -1966,6 +1971,8 @@ if st.session_state.ocr_df is not None:
                 )
                 if bad.any():
                     raise ValueError("AG 每一款的摘要都必須輸入6位數字，系統會每2碼分別帶入類別2、類別3、類別4。")
+                if not str(season or "").strip():
+                    raise ValueError("請輸入 AG 商品基本資料的季別。")
 
             if brand == "AN":
                 final_df,working,code_by_key,statuses=assign_an_codes(
@@ -1973,7 +1980,7 @@ if st.session_state.ocr_df is not None:
                 )
             elif brand == "AG":
                 final_df,working,code_by_key,statuses=assign_ag_codes(
-                    confirmed_df,ledger,brand_code,custom_code,seq_mode,manual_starts,live_color_map
+                    confirmed_df,ledger,ag_code_digit,custom_code,seq_mode,manual_starts,live_color_map
                 )
             else:
                 final_df,working,code_by_key,statuses=assign_jb_codes(
