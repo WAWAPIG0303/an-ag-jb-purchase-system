@@ -1,5 +1,5 @@
 {
-  "next_sequence": 19,
+  "next_sequence": 32,
   "assignments": {
     "597|2702-1": {
       "prefix11": "93000262188",
@@ -171,10 +171,19 @@
       "vendor_code": "C74",
       "original": "8020",
       "price": 1580
+    },
+    "B49|9006": {
+      "prefix11": "91003162138",
+      "sequence": 31,
+      "category": "上衣",
+      "category_code": "1",
+      "vendor_code": "B49",
+      "original": "9006",
+      "price": 1380
     }
   },
   "next_sequence_by_category": {
-    "1": 1,
+    "1": 32,
     "2": 1,
     "3": 9,
     "4": 8,
