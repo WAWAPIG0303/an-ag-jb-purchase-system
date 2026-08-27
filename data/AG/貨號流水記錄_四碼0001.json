@@ -1,5 +1,5 @@
 {
-  "next_sequence": 13,
+  "next_sequence": 19,
   "assignments": {
     "597|2702-1": {
       "prefix11": "93000262188",
@@ -117,6 +117,60 @@
       "vendor_code": "450",
       "original": "675",
       "price": 1980
+    },
+    "C74|6307": {
+      "prefix11": "96001362168",
+      "sequence": 13,
+      "category": "外套",
+      "category_code": "6",
+      "vendor_code": "C74",
+      "original": "6307",
+      "price": 1680
+    },
+    "C74|6225": {
+      "prefix11": "96001462168",
+      "sequence": 14,
+      "category": "外套",
+      "category_code": "6",
+      "vendor_code": "C74",
+      "original": "6225",
+      "price": 1680
+    },
+    "C74|6163": {
+      "prefix11": "96001562168",
+      "sequence": 15,
+      "category": "外套",
+      "category_code": "6",
+      "vendor_code": "C74",
+      "original": "6163",
+      "price": 1680
+    },
+    "C74|8005": {
+      "prefix11": "96001662158",
+      "sequence": 16,
+      "category": "外套",
+      "category_code": "6",
+      "vendor_code": "C74",
+      "original": "8005",
+      "price": 1580
+    },
+    "C74|8039": {
+      "prefix11": "96001762158",
+      "sequence": 17,
+      "category": "外套",
+      "category_code": "6",
+      "vendor_code": "C74",
+      "original": "8039",
+      "price": 1580
+    },
+    "C74|8020": {
+      "prefix11": "96001862158",
+      "sequence": 18,
+      "category": "外套",
+      "category_code": "6",
+      "vendor_code": "C74",
+      "original": "8020",
+      "price": 1580
     }
   },
   "next_sequence_by_category": {
@@ -125,7 +179,7 @@
     "3": 9,
     "4": 8,
     "5": 1,
-    "6": 13,
+    "6": 19,
     "7": 1,
     "8": 1
   }
