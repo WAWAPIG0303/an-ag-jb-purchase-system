@@ -180,6 +180,33 @@
       "vendor_code": "B49",
       "original": "9006",
       "price": 1380
+    },
+    "C75|5622": {
+      "prefix11": "96001962099",
+      "sequence": 19,
+      "category": "外套",
+      "category_code": "6",
+      "vendor_code": "C75",
+      "original": "5622",
+      "price": 990
+    },
+    "C75|8057": {
+      "prefix11": "96002062099",
+      "sequence": 20,
+      "category": "外套",
+      "category_code": "6",
+      "vendor_code": "C75",
+      "original": "8057",
+      "price": 990
+    },
+    "C75|6701": {
+      "prefix11": "96002162099",
+      "sequence": 21,
+      "category": "外套",
+      "category_code": "6",
+      "vendor_code": "C75",
+      "original": "6701",
+      "price": 990
     }
   },
   "next_sequence_by_category": {
@@ -188,7 +215,7 @@
     "3": 9,
     "4": 8,
     "5": 1,
-    "6": 19,
+    "6": 22,
     "7": 1,
     "8": 1
   }
