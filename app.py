@@ -1634,10 +1634,20 @@ if st.button("🔍 開始 OCR 辨識",type="primary",disabled=not images):
 if st.session_state.ocr_df is not None:
     st.header("② 確認／修改資料")
     st.info("可以直接點表格修改。新廠商請填入『廠商名稱＋廠商代碼』，產生後會自動永久保存。")
+    editor_df=st.session_state.ocr_df.drop(columns=["OCR文字"],errors="ignore").copy()
+    if "數量" in editor_df.columns:
+        # OCR 未辨識時可能留下 None／文字，會讓 Streamlit 將整欄判定為混合格式並鎖住。
+        # 統一轉成可留白的整數欄，讓使用者可直接補填或修改。
+        editor_df["數量"]=pd.to_numeric(editor_df["數量"],errors="coerce").astype("Int64")
     edited=st.data_editor(
-        st.session_state.ocr_df.drop(columns=["OCR文字"],errors="ignore"),
+        editor_df,
         num_rows="dynamic",
         use_container_width=True,
+        column_config={
+            "數量":st.column_config.NumberColumn(
+                "數量",min_value=0,step=1,format="%d"
+            )
+        },
         key="editor"
     )
     edited=edited.copy()
@@ -1773,10 +1783,12 @@ if st.session_state.ocr_df is not None:
         with a: brand_code=st.text_input("品牌代碼／第1碼",value="3",max_chars=1,key="JB_brand_digit")
         with b: season=st.text_input("季別",key="JB_season")
         with c: custom_code=st.text_input("8碼第7～8碼（整批共用）",max_chars=2,placeholder="例如 23",key="JB_custom")
-    if brand == "AG":
-        optional_date=st.text_input("日期（選填）",placeholder="例如 8/24",key="AG_date")
-    else:
-        with d: optional_date=st.text_input("日期（選填）",placeholder="例如 8/24",key=f"{brand}_date")
+    purchase_date=st.text_input(
+        "採購日期（選填）",placeholder="例如 8/27",key=f"{brand}_purchase_date"
+    )
+    build_date=st.text_input(
+        "建檔日期（選填）",placeholder="例如 20260827",key=f"{brand}_build_date"
+    )
     optional_page=st.text_input("頁數（選填）",key=f"{brand}_page")
 
     shop_classifications = {}
@@ -1947,7 +1959,9 @@ if st.session_state.ocr_df is not None:
     generate_label="✅ 產生採購單＋商品基本資料＋SHOPLINE匯入檔" if brand=="AN" else "✅ 產生採購單＋商品基本資料"
     if st.button(generate_label,type="primary"):
         try:
-            required=["廠商","廠商代碼","原廠編號","類別代碼","類別","顏色","尺寸","進價","售價","數量","備註2"]
+            required=["廠商","廠商代碼","原廠編號","類別代碼","類別","顏色","尺寸","進價","售價","數量"]
+            if brand != "AG":
+                required.append("備註2")
             if brand == "AG":
                 required.append("摘要")
             problems=[]
@@ -1961,6 +1975,10 @@ if st.session_state.ocr_df is not None:
                 raise ValueError(f"{brand} 第7～8碼必須輸入2位數字。")
             if brand == "JB" and not re.fullmatch(r"\d",brand_code or ""):
                 raise ValueError("JB 品牌代碼／第1碼必須輸入1位數字。")
+            if purchase_date.strip() and not re.fullmatch(r"\d{1,2}/\d{1,2}", purchase_date.strip()):
+                raise ValueError("採購日期請使用 8/27 格式。")
+            if build_date.strip() and not re.fullmatch(r"\d{8}", build_date.strip()):
+                raise ValueError("建檔日期請使用 20260827 格式（8位數字）。")
             # 人工確認資料優先：產生前固定使用目前畫面 edited
             confirmed_df = mark_manual_edits_as_final(edited)
             st.session_state.ocr_df = confirmed_df.copy()
@@ -1988,11 +2006,11 @@ if st.session_state.ocr_df is not None:
                 )
 
             purchase_outputs=create_purchase_workbooks(
-                final_df,config_bytes["purchase_template"],brand,brand_code,optional_date,optional_page
+                final_df,config_bytes["purchase_template"],brand,brand_code,purchase_date.strip(),optional_page
             )
             master_name,master_bytes,master_df=create_master_workbook(
                 final_df,config_bytes["master_template"],code_by_key,live_color_map,
-                brand,brand_code,season,optional_date
+                brand,brand_code,season,build_date.strip()
             )
 
             shop_name=shop_bytes=shop_df=None
