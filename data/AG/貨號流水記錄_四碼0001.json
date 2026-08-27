@@ -81,13 +81,22 @@
       "vendor_code": "C73",
       "original": "3387",
       "price": 1780
+    },
+    "B90|267620": {
+      "prefix11": "94000762138",
+      "sequence": 7,
+      "category": "褲子",
+      "category_code": "4",
+      "vendor_code": "B90",
+      "original": "267620",
+      "price": 1380
     }
   },
   "next_sequence_by_category": {
     "1": 1,
     "2": 1,
     "3": 9,
-    "4": 1,
+    "4": 8,
     "5": 1,
     "6": 10,
     "7": 1,
