@@ -1,5 +1,5 @@
 {
-  "next_sequence": 34,
+  "next_sequence": 40,
   "assignments": {
     "C60|1810": {
       "base8": "35000562",
@@ -484,14 +484,86 @@
       "brand_code": "3",
       "vendor_code": "959",
       "original": "26637"
+    },
+    "227|6167": {
+      "base8": "31003462",
+      "sequence": 34,
+      "category": "上衣",
+      "category_code": "1",
+      "brand_code": "3",
+      "vendor_code": "227",
+      "original": "6167"
+    },
+    "227|6087": {
+      "base8": "31003562",
+      "sequence": 35,
+      "category": "上衣",
+      "category_code": "1",
+      "brand_code": "3",
+      "vendor_code": "227",
+      "original": "6087"
+    },
+    "227|6080": {
+      "base8": "31003662",
+      "sequence": 36,
+      "category": "上衣",
+      "category_code": "1",
+      "brand_code": "3",
+      "vendor_code": "227",
+      "original": "6080"
+    },
+    "227|6085": {
+      "base8": "31003762",
+      "sequence": 37,
+      "category": "上衣",
+      "category_code": "1",
+      "brand_code": "3",
+      "vendor_code": "227",
+      "original": "6085"
+    },
+    "227|6131": {
+      "base8": "34001662",
+      "sequence": 16,
+      "category": "褲子",
+      "category_code": "4",
+      "brand_code": "3",
+      "vendor_code": "227",
+      "original": "6131"
+    },
+    "227|6018": {
+      "base8": "34001762",
+      "sequence": 17,
+      "category": "褲子",
+      "category_code": "4",
+      "brand_code": "3",
+      "vendor_code": "227",
+      "original": "6018"
+    },
+    "227|6022": {
+      "base8": "31003862",
+      "sequence": 38,
+      "category": "上衣",
+      "category_code": "1",
+      "brand_code": "3",
+      "vendor_code": "227",
+      "original": "6022"
+    },
+    "227|6176": {
+      "base8": "31003962",
+      "sequence": 39,
+      "category": "上衣",
+      "category_code": "1",
+      "brand_code": "3",
+      "vendor_code": "227",
+      "original": "6176"
     }
   },
   "next_sequence_by_category": {
     "5": 13,
-    "1": 34,
+    "1": 40,
     "2": 1,
     "3": 1,
-    "4": 16,
+    "4": 18,
     "6": 17,
     "7": 1,
     "8": 20
