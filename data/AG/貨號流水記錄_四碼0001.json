@@ -1,5 +1,5 @@
 {
-  "next_sequence": 43,
+  "next_sequence": 63,
   "assignments": {
     "597|2702-1": {
       "prefix11": "93000262188",
@@ -405,15 +405,249 @@
       "vendor_code": "B47",
       "original": "5253",
       "price": 1180
+    },
+    "B48|13964": {
+      "prefix11": "91004362138",
+      "sequence": 43,
+      "category": "上衣",
+      "category_code": "1",
+      "vendor_code": "B48",
+      "original": "13964",
+      "price": 1380
+    },
+    "B48|20736": {
+      "prefix11": "96002462138",
+      "sequence": 24,
+      "category": "外套",
+      "category_code": "6",
+      "vendor_code": "B48",
+      "original": "20736",
+      "price": 1380
+    },
+    "B48|20749": {
+      "prefix11": "91004462128",
+      "sequence": 44,
+      "category": "上衣",
+      "category_code": "1",
+      "vendor_code": "B48",
+      "original": "20749",
+      "price": 1280
+    },
+    "B48|20722": {
+      "prefix11": "91004562138",
+      "sequence": 45,
+      "category": "上衣",
+      "category_code": "1",
+      "vendor_code": "B48",
+      "original": "20722",
+      "price": 1380
+    },
+    "B48|30066": {
+      "prefix11": "91004662138",
+      "sequence": 46,
+      "category": "上衣",
+      "category_code": "1",
+      "vendor_code": "B48",
+      "original": "30066",
+      "price": 1380
+    },
+    "B48|12682": {
+      "prefix11": "91004762138",
+      "sequence": 47,
+      "category": "上衣",
+      "category_code": "1",
+      "vendor_code": "B48",
+      "original": "12682",
+      "price": 1380
+    },
+    "B48|20198": {
+      "prefix11": "91004862128",
+      "sequence": 48,
+      "category": "上衣",
+      "category_code": "1",
+      "vendor_code": "B48",
+      "original": "20198",
+      "price": 1280
+    },
+    "B48|20711": {
+      "prefix11": "91004962128",
+      "sequence": 49,
+      "category": "上衣",
+      "category_code": "1",
+      "vendor_code": "B48",
+      "original": "20711",
+      "price": 1280
+    },
+    "B48|13923": {
+      "prefix11": "91005062128",
+      "sequence": 50,
+      "category": "上衣",
+      "category_code": "1",
+      "vendor_code": "B48",
+      "original": "13923",
+      "price": 1280
+    },
+    "B48|20700": {
+      "prefix11": "91005162128",
+      "sequence": 51,
+      "category": "上衣",
+      "category_code": "1",
+      "vendor_code": "B48",
+      "original": "20700",
+      "price": 1280
+    },
+    "B48|13351": {
+      "prefix11": "91005262128",
+      "sequence": 52,
+      "category": "上衣",
+      "category_code": "1",
+      "vendor_code": "B48",
+      "original": "13351",
+      "price": 1280
+    },
+    "B48|20713": {
+      "prefix11": "91005362128",
+      "sequence": 53,
+      "category": "上衣",
+      "category_code": "1",
+      "vendor_code": "B48",
+      "original": "20713",
+      "price": 1280
+    },
+    "B48|13930": {
+      "prefix11": "91005462138",
+      "sequence": 54,
+      "category": "上衣",
+      "category_code": "1",
+      "vendor_code": "B48",
+      "original": "13930",
+      "price": 1380
+    },
+    "B48|13916": {
+      "prefix11": "94000962138",
+      "sequence": 9,
+      "category": "褲子",
+      "category_code": "4",
+      "vendor_code": "B48",
+      "original": "13916",
+      "price": 1380
+    },
+    "B48|13325": {
+      "prefix11": "96002562148",
+      "sequence": 25,
+      "category": "外套",
+      "category_code": "6",
+      "vendor_code": "B48",
+      "original": "13325",
+      "price": 1480
+    },
+    "B48|13927": {
+      "prefix11": "94001062138",
+      "sequence": 10,
+      "category": "褲子",
+      "category_code": "4",
+      "vendor_code": "B48",
+      "original": "13927",
+      "price": 1380
+    },
+    "B48|30067": {
+      "prefix11": "94001162138",
+      "sequence": 11,
+      "category": "褲子",
+      "category_code": "4",
+      "vendor_code": "B48",
+      "original": "30067",
+      "price": 1380
+    },
+    "B48|13929": {
+      "prefix11": "96002662168",
+      "sequence": 26,
+      "category": "外套",
+      "category_code": "6",
+      "vendor_code": "B48",
+      "original": "13929",
+      "price": 1680
+    },
+    "B48|13933": {
+      "prefix11": "91005562138",
+      "sequence": 55,
+      "category": "上衣",
+      "category_code": "1",
+      "vendor_code": "B48",
+      "original": "13933",
+      "price": 1380
+    },
+    "B48|13935": {
+      "prefix11": "91005662138",
+      "sequence": 56,
+      "category": "上衣",
+      "category_code": "1",
+      "vendor_code": "B48",
+      "original": "13935",
+      "price": 1380
+    },
+    "B48|20735": {
+      "prefix11": "91005762138",
+      "sequence": 57,
+      "category": "上衣",
+      "category_code": "1",
+      "vendor_code": "B48",
+      "original": "20735",
+      "price": 1380
+    },
+    "B48|20725": {
+      "prefix11": "91005862138",
+      "sequence": 58,
+      "category": "上衣",
+      "category_code": "1",
+      "vendor_code": "B48",
+      "original": "20725",
+      "price": 1380
+    },
+    "B48|20745": {
+      "prefix11": "91005962138",
+      "sequence": 59,
+      "category": "上衣",
+      "category_code": "1",
+      "vendor_code": "B48",
+      "original": "20745",
+      "price": 1380
+    },
+    "B48|20742": {
+      "prefix11": "91006062138",
+      "sequence": 60,
+      "category": "上衣",
+      "category_code": "1",
+      "vendor_code": "B48",
+      "original": "20742",
+      "price": 1380
+    },
+    "B48|20719": {
+      "prefix11": "91006162128",
+      "sequence": 61,
+      "category": "上衣",
+      "category_code": "1",
+      "vendor_code": "B48",
+      "original": "20719",
+      "price": 1280
+    },
+    "B48|20715": {
+      "prefix11": "91006262138",
+      "sequence": 62,
+      "category": "上衣",
+      "category_code": "1",
+      "vendor_code": "B48",
+      "original": "20715",
+      "price": 1380
     }
   },
   "next_sequence_by_category": {
-    "1": 43,
+    "1": 63,
     "2": 1,
     "3": 10,
-    "4": 9,
+    "4": 12,
     "5": 10,
-    "6": 24,
+    "6": 27,
     "7": 1,
     "8": 11
   }
