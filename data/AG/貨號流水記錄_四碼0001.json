@@ -243,6 +243,15 @@
       "vendor_code": "B41",
       "original": "510-1",
       "price": 1880
+    },
+    "132|6396": {
+      "prefix11": "96002262268",
+      "sequence": 22,
+      "category": "外套",
+      "category_code": "6",
+      "vendor_code": "132",
+      "original": "6396",
+      "price": 2680
     }
   },
   "next_sequence_by_category": {
@@ -251,7 +260,7 @@
     "3": 10,
     "4": 8,
     "5": 1,
-    "6": 22,
+    "6": 23,
     "7": 1,
     "8": 1
   }
