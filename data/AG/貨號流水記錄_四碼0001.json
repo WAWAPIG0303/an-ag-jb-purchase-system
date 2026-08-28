@@ -1,5 +1,5 @@
 {
-  "next_sequence": 38,
+  "next_sequence": 43,
   "assignments": {
     "597|2702-1": {
       "prefix11": "93000262188",
@@ -360,10 +360,55 @@
       "vendor_code": "552",
       "original": "80622",
       "price": 1380
+    },
+    "B47|1362": {
+      "prefix11": "91003862118",
+      "sequence": 38,
+      "category": "上衣",
+      "category_code": "1",
+      "vendor_code": "B47",
+      "original": "1362",
+      "price": 1180
+    },
+    "B47|1369": {
+      "prefix11": "91003962108",
+      "sequence": 39,
+      "category": "上衣",
+      "category_code": "1",
+      "vendor_code": "B47",
+      "original": "1369",
+      "price": 1080
+    },
+    "B47|5206": {
+      "prefix11": "91004062148",
+      "sequence": 40,
+      "category": "上衣",
+      "category_code": "1",
+      "vendor_code": "B47",
+      "original": "5206",
+      "price": 1480
+    },
+    "B47|1303": {
+      "prefix11": "91004162148",
+      "sequence": 41,
+      "category": "上衣",
+      "category_code": "1",
+      "vendor_code": "B47",
+      "original": "1303",
+      "price": 1480
+    },
+    "B47|5253": {
+      "prefix11": "91004262118",
+      "sequence": 42,
+      "category": "上衣",
+      "category_code": "1",
+      "vendor_code": "B47",
+      "original": "5253",
+      "price": 1180
     }
   },
   "next_sequence_by_category": {
-    "1": 38,
+    "1": 43,
     "2": 1,
     "3": 10,
     "4": 9,
