@@ -297,16 +297,79 @@
       "vendor_code": "845",
       "original": "6070",
       "price": 2980
+    },
+    "552|80781": {
+      "prefix11": "91003562108",
+      "sequence": 35,
+      "category": "上衣",
+      "category_code": "1",
+      "vendor_code": "552",
+      "original": "80781",
+      "price": 1080
+    },
+    "552|80735": {
+      "prefix11": "91003662138",
+      "sequence": 36,
+      "category": "上衣",
+      "category_code": "1",
+      "vendor_code": "552",
+      "original": "80735",
+      "price": 1380
+    },
+    "552|80802": {
+      "prefix11": "91003762108",
+      "sequence": 37,
+      "category": "上衣",
+      "category_code": "1",
+      "vendor_code": "552",
+      "original": "80802",
+      "price": 1080
+    },
+    "552|80811": {
+      "prefix11": "98001062128",
+      "sequence": 10,
+      "category": "套裝",
+      "category_code": "8",
+      "vendor_code": "552",
+      "original": "80811",
+      "price": 1280
+    },
+    "552|80732": {
+      "prefix11": "95000862148",
+      "sequence": 8,
+      "category": "裙子",
+      "category_code": "5",
+      "vendor_code": "552",
+      "original": "80732",
+      "price": 1480
+    },
+    "552|9883": {
+      "prefix11": "94000862158",
+      "sequence": 8,
+      "category": "褲子",
+      "category_code": "4",
+      "vendor_code": "552",
+      "original": "9883",
+      "price": 1580
+    },
+    "552|80622": {
+      "prefix11": "95000962138",
+      "sequence": 9,
+      "category": "裙子",
+      "category_code": "5",
+      "vendor_code": "552",
+      "original": "80622",
+      "price": 1380
     }
   },
   "next_sequence_by_category": {
     "1": 38,
     "2": 1,
     "3": 10,
-    "4": 8,
-    "5": 8,
+    "4": 9,
+    "5": 10,
     "6": 24,
     "7": 1,
-    "8": 1
+    "8": 11
   }
 }
