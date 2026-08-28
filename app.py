@@ -6,6 +6,7 @@ from copy import copy, deepcopy
 from pathlib import Path
 from PIL import Image
 from openpyxl import load_workbook
+from openpyxl.utils import get_column_letter
 import cv2
 from rapidocr_onnxruntime import RapidOCR
 
@@ -1111,8 +1112,21 @@ def create_purchase_workbooks(df, template_bytes, brand_name, brand_code, option
             for c in range(1,ws.max_column+1) if ws.cell(2,c).value
         }
         ws["A1"]=f'廠商: {vendor}                                  廠代: {group.iloc[0]["廠商代碼"]}                                   品牌代碼: {brand_code}'
-        if optional_page:
-            ws.cell(1,ws.max_column,f"頁數:{optional_page}")
+        # A4 橫向列印：寬度固定一頁，資料超出高度時自動延續至下一頁。
+        # 每頁重複第1～2列表頭，並自動顯示目前頁碼／總頁數。
+        ws.page_setup.orientation="landscape"
+        ws.page_setup.paperSize=ws.PAPERSIZE_A4
+        ws.sheet_properties.pageSetUpPr.fitToPage=True
+        ws.page_setup.fitToWidth=1
+        ws.page_setup.fitToHeight=0
+        ws.print_title_rows="1:2"
+        ws.oddHeader.right.text="第 &P / &N 頁"
+        ws.oddHeader.right.size=10
+        ws.evenHeader.right.text="第 &P / &N 頁"
+        ws.evenHeader.right.size=10
+        if str(optional_page or "").strip().isdigit():
+            ws.page_setup.firstPageNumber=int(str(optional_page).strip())
+            ws.page_setup.useFirstPageNumber=True
         for n,(_,r) in enumerate(group.iterrows(),3):
             for col in range(1,ws.max_column+1):
                 src,dst=ws.cell(2,col),ws.cell(n,col)
@@ -1136,6 +1150,8 @@ def create_purchase_workbooks(df, template_bytes, brand_name, brand_code, option
             for h,v in vals.items():
                 if h in headers:
                     ws.cell(n,headers[h],v)
+        last_row=max(2,2+len(group))
+        ws.print_area=f"A1:{get_column_letter(ws.max_column)}{last_row}"
         bio=io.BytesIO()
         wb.save(bio)
         outputs[f'{brand_name}採購單-{group.iloc[0]["廠商代碼"]}.xlsx']=bio.getvalue()
@@ -1813,7 +1829,9 @@ if st.session_state.ocr_df is not None:
     build_date=st.text_input(
         "建檔日期（選填）",placeholder="例如 20260827",key=f"{brand}_build_date"
     )
-    optional_page=st.text_input("頁數（選填）",key=f"{brand}_page")
+    optional_page=st.text_input(
+        "起始頁碼（選填）",placeholder="空白時自動從第1頁開始",key=f"{brand}_page"
+    )
 
     shop_classifications = {}
     shop_price_overrides = {}
