@@ -7,6 +7,7 @@ from pathlib import Path
 from PIL import Image
 from openpyxl import load_workbook
 from openpyxl.utils import get_column_letter
+from openpyxl.worksheet.pagebreak import Break, RowBreak
 import cv2
 from rapidocr_onnxruntime import RapidOCR
 
@@ -32,7 +33,11 @@ if st.session_state.get("active_brand") != brand:
     st.session_state.pop("editor", None)
     st.session_state.pop("images", None)
     for state_key in list(st.session_state.keys()):
-        if str(state_key).startswith("AG_summary_"):
+        if str(state_key).startswith(("AN_summary_","AG_summary_","JB_summary_")):
+            st.session_state.pop(state_key, None)
+        if str(state_key).endswith("_summary_editor"):
+            st.session_state.pop(state_key, None)
+        if str(state_key).endswith("_note2_editor"):
             st.session_state.pop(state_key, None)
 
 st.title(f"🧾 {brand} 採購系統")
@@ -1102,9 +1107,31 @@ def safe_int(v, default=None):
         return default
 
 
+def material_four_value(v):
+    """材質四保留照片／人工輸入的整數百分比，不轉成 Excel 小數。"""
+    if v is None:
+        return ""
+    try:
+        if pd.isna(v):
+            return ""
+    except Exception:
+        pass
+    s = str(v).strip()
+    if not s or s.lower() == "nan":
+        return ""
+    if s.endswith("%"):
+        s = s[:-1].strip()
+    if re.fullmatch(r"\d+\.0+", s):
+        s = s.split(".", 1)[0]
+    return s
+
+
 def create_purchase_workbooks(df, template_bytes, brand_name, brand_code, optional_date, optional_page):
     outputs={}
     for vendor,group in df.groupby("廠商",sort=False):
+        # 同一原廠編號的所有顏色／尺寸必須連在一起，才能整組分頁。
+        original_groups=[g for _,g in group.groupby("原廠編號",sort=False)]
+        group=pd.concat(original_groups) if original_groups else group
         wb=load_workbook(io.BytesIO(template_bytes))
         ws=wb["Sheet2"] if "Sheet2" in wb.sheetnames else wb.active
         headers={
@@ -1119,6 +1146,9 @@ def create_purchase_workbooks(df, template_bytes, brand_name, brand_code, option
         ws.sheet_properties.pageSetUpPr.fitToPage=True
         ws.page_setup.fitToWidth=1
         ws.page_setup.fitToHeight=0
+        ws.page_setup.pageOrder="downThenOver"
+        # 開啟 Excel 時直接顯示分頁預覽；資料仍保留在同一個工作表。
+        ws.sheet_view.view="pageBreakPreview"
         ws.print_title_rows="1:2"
         ws.oddHeader.right.text="第 &P / &N 頁"
         ws.oddHeader.right.size=10
@@ -1127,6 +1157,20 @@ def create_purchase_workbooks(df, template_bytes, brand_name, brand_code, option
         if str(optional_page or "").strip().isdigit():
             ws.page_setup.firstPageNumber=int(str(optional_page).strip())
             ws.page_setup.useFirstPageNumber=True
+
+        # A4 橫向每頁保留 28 筆資料。若同一原廠編號會跨頁，
+        # 就在該原廠編號開始前換頁，避免前半在上一頁、後半在下一頁。
+        data_rows_per_page=28
+        used_rows=0
+        next_excel_row=3
+        ws.row_breaks=RowBreak()
+        for _,original_group in group.groupby("原廠編號",sort=False):
+            original_row_count=len(original_group)
+            if used_rows and used_rows+original_row_count>data_rows_per_page:
+                ws.row_breaks.append(Break(id=next_excel_row-1))
+                used_rows=0
+            used_rows+=original_row_count
+            next_excel_row+=original_row_count
         for n,(_,r) in enumerate(group.iterrows(),3):
             for col in range(1,ws.max_column+1):
                 src,dst=ws.cell(2,col),ws.cell(n,col)
@@ -1186,12 +1230,14 @@ def create_master_workbook(df, template_bytes, code_by_key, color_map, brand_nam
                 if brand_name == "AG" else ["", "", ""]
             )
             photo_price = safe_int(first.get("售價"), "")
-            master_price = photo_price * 2 if brand_name == "JB" and isinstance(photo_price, int) else photo_price
-            special_price = master_price if brand_name == "JB" else ""
-            note1 = f"特價{photo_price}" if brand_name == "JB" and isinstance(photo_price, int) else ""
+            double_price_brand = brand_name in ("AG", "JB")
+            master_price = photo_price * 2 if double_price_brand and isinstance(photo_price, int) else photo_price
+            special_price = photo_price if brand_name == "AG" and isinstance(photo_price, int) else (master_price if brand_name == "JB" else "")
+            note1 = f"特價{photo_price}" if double_price_brand and isinstance(photo_price, int) else ""
             records.append({
                 "商品型號":product_code,
-                "品名規格":product_code+cname if brand_name == "AG" else base+cname,
+                # AG 品名規格使用前11碼（金額碼結尾）＋顏色名稱，不加入2碼顏色代碼。
+                "品名規格":base+cname,
                 "供應廠商":vendor_code,
                 "品牌編號":brand_code,
                 "建議售價":master_price,
@@ -1204,7 +1250,7 @@ def create_master_workbook(df, template_bytes, code_by_key, color_map, brand_nam
                 "類別4":summary_parts[2],
                 "類別5":str(ccode),"尺碼代號":sizecode,
                 "季別":season,"建檔日期":optional_date,
-                "備註1":note1,"原廠編號":original,"材質四":first["備註2"],
+                "備註1":note1,"原廠編號":original,"材質四":material_four_value(first["備註2"]),
                 "數量":sum(safe_int(v, 0) or 0 for v in cg["數量"])
             })
     if missing_colors:
@@ -1219,7 +1265,7 @@ def create_master_workbook(df, template_bytes, code_by_key, color_map, brand_nam
         for cn,h in enumerate(heads,1):
             cell=ws.cell(rn,cn,rec.get(h,""))
             cell._style=copy(ws.cell(1,cn)._style)
-            if h in ["商品型號","品名規格","供應廠商","品牌編號","類別1","類別2","類別3","類別4","類別5","尺碼代號","原廠編號"]:
+            if h in ["商品型號","品名規格","供應廠商","品牌編號","類別1","類別2","類別3","類別4","類別5","尺碼代號","原廠編號","材質四"]:
                 cell.number_format="@"
     bio=io.BytesIO()
     wb.save(bio)
@@ -1628,7 +1674,11 @@ images=st.file_uploader("可一次選多張 JPG / PNG / WEBP",type=["jpg","jpeg"
 if st.button("🔍 開始 OCR 辨識",type="primary",disabled=not images):
     try:
         for state_key in list(st.session_state.keys()):
-            if str(state_key).startswith("AG_summary_"):
+            if str(state_key).startswith(("AN_summary_","AG_summary_","JB_summary_")):
+                st.session_state.pop(state_key, None)
+            if str(state_key).endswith("_summary_editor"):
+                st.session_state.pop(state_key, None)
+            if str(state_key).endswith("_note2_editor"):
                 st.session_state.pop(state_key, None)
         rows=[]; progress=st.progress(0)
         for i,img in enumerate(images):
@@ -1677,10 +1727,14 @@ if st.session_state.ocr_df is not None:
         # OCR 未辨識時可能留下 None／文字，會讓 Streamlit 將整欄判定為混合格式並鎖住。
         # 統一轉成可留白的整數欄，讓使用者可直接補填或修改。
         editor_df["數量"]=pd.to_numeric(editor_df["數量"],errors="coerce").astype("Int64")
+    locked_review_columns=["摘要"]
+    if brand in ("AN","JB"):
+        locked_review_columns.append("備註2")
     edited=st.data_editor(
         editor_df,
         num_rows="dynamic",
         use_container_width=True,
+        disabled=locked_review_columns,
         column_config={
             "數量":st.column_config.NumberColumn(
                 "數量",min_value=0,step=1,format="%d"
@@ -1692,6 +1746,85 @@ if st.session_state.ocr_df is not None:
 
     # 目前畫面上的人工修改就是最終資料來源
     edited = mark_manual_edits_as_final(edited)
+
+    # 照片辨識後立即顯示逐款摘要表：同一原廠編號只需填寫一次。
+    summary_records=[]
+    for (vendor_code,original),indexes in edited.groupby(
+        ["廠商代碼","原廠編號"],sort=False
+    ).groups.items():
+        idx_list=list(indexes)
+        existing=[
+            str(v).strip() for v in edited.loc[idx_list,"摘要"].tolist()
+            if str(v).strip() and str(v).strip().lower()!="nan"
+        ] if "摘要" in edited.columns else []
+        summary_records.append({
+            "廠商代碼":vendor_code,
+            "原廠編號":original,
+            "摘要":existing[0] if existing else "",
+        })
+
+    st.subheader(f"{brand} 每款摘要表（照片上傳後填寫）")
+    st.caption("每個原廠編號只需填一次，系統會自動套用該款全部顏色與尺寸。")
+    summary_table=st.data_editor(
+        pd.DataFrame(summary_records,columns=["廠商代碼","原廠編號","摘要"]),
+        hide_index=True,
+        num_rows="fixed",
+        use_container_width=True,
+        disabled=["廠商代碼","原廠編號"],
+        column_config={
+            "摘要":st.column_config.TextColumn(
+                "摘要（AG請填6位數字）" if brand=="AG" else "摘要",
+                max_chars=6 if brand=="AG" else None,
+            )
+        },
+        key=f"{brand}_summary_editor",
+    )
+    for _,summary_row in summary_table.iterrows():
+        summary_value=summary_row["摘要"]
+        if pd.isna(summary_value):
+            summary_value=""
+        same_product=(
+            edited["廠商代碼"].astype(str).eq(str(summary_row["廠商代碼"]))
+            & edited["原廠編號"].astype(str).eq(str(summary_row["原廠編號"]))
+        )
+        edited.loc[same_product,"摘要"]=str(summary_value).strip()
+
+    # AN／JB 的備註2依款式輸入一次，同一原廠編號的所有顏色／尺寸共用。
+    if brand in ("AN","JB"):
+        note2_records=[]
+        for (vendor_code,original),indexes in edited.groupby(
+            ["廠商代碼","原廠編號"],sort=False
+        ).groups.items():
+            idx_list=list(indexes)
+            existing=[
+                str(v).strip() for v in edited.loc[idx_list,"備註2"].tolist()
+                if str(v).strip() and str(v).strip().lower()!="nan"
+            ] if "備註2" in edited.columns else []
+            note2_records.append({
+                "廠商代碼":vendor_code,
+                "原廠編號":original,
+                "備註2":existing[0] if existing else "",
+            })
+
+        st.subheader(f"{brand} 每款備註2（選填）")
+        st.caption("每個原廠編號只需填一次，系統會自動套用該款全部顏色與尺寸；沒有內容可以留白。")
+        note2_table=st.data_editor(
+            pd.DataFrame(note2_records,columns=["廠商代碼","原廠編號","備註2"]),
+            hide_index=True,
+            num_rows="fixed",
+            use_container_width=True,
+            disabled=["廠商代碼","原廠編號"],
+            key=f"{brand}_note2_editor",
+        )
+        for _,note2_row in note2_table.iterrows():
+            note2_value=note2_row["備註2"]
+            if pd.isna(note2_value):
+                note2_value=""
+            same_product=(
+                edited["廠商代碼"].astype(str).eq(str(note2_row["廠商代碼"]))
+                & edited["原廠編號"].astype(str).eq(str(note2_row["原廠編號"]))
+            )
+            edited.loc[same_product,"備註2"]=str(note2_value).strip()
 
     st.info(
         "人工修改優先：你在這個表格修改的顏色、尺寸、數量，"
@@ -1791,23 +1924,10 @@ if st.session_state.ocr_df is not None:
         if ccode in category_map:
             edited.at[idx,"類別"]=category_map[ccode]
 
-    # AG 摘要逐款輸入一次，所有顏色／尺寸共用同一數字。
-    if brand == "AG":
-        st.subheader("AG 摘要數字（同款所有顏色共用）")
-        for n, ((vendor_code, original), indexes) in enumerate(
-            edited.groupby(["廠商代碼", "原廠編號"], sort=False).groups.items(), 1
-        ):
-            idx_list = list(indexes)
-            value = st.text_input(
-                f"原廠編號 {original} 的摘要數字",
-                value="",
-                key=f"AG_summary_{n}_{vendor_code}_{original}",
-            ).strip()
-            edited.loc[idx_list, "摘要"] = value
-
     a,b,c,d=st.columns(4)
     if brand == "AN":
-        with a: brand_code=st.text_input("品牌代碼",value="6",key="AN_brand_code")
+        brand_code="006"
+        with a: st.text_input("品牌代碼",value=brand_code,disabled=True,key="AN_brand_code")
         with b: season=st.text_input("季別",key="AN_season")
         with c: custom_code=st.text_input("8碼貨號第3～5碼",max_chars=3,placeholder="例如 813",key="AN_custom")
     elif brand == "AG":
@@ -1959,8 +2079,6 @@ if st.session_state.ocr_df is not None:
     if st.button(generate_label,type="primary"):
         try:
             required=["廠商","廠商代碼","原廠編號","類別代碼","類別","顏色","尺寸","進價","售價","數量"]
-            if brand != "AG":
-                required.append("備註2")
             if brand == "AG":
                 required.append("摘要")
             problems=[]
