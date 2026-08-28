@@ -1619,6 +1619,9 @@ if st.button("🔍 開始 OCR 辨識",type="primary",disabled=not images):
             rows.extend(parse_image(img,vendor_map,category_map))
             progress.progress((i+1)/len(images))
         st.session_state.ocr_df=pd.DataFrame(rows)
+        st.session_state.pop(f"{brand}_batch_vendor",None)
+        st.session_state.pop(f"{brand}_batch_vendor_code",None)
+        st.session_state.pop("editor",None)
         st.success(f"完成，共辨識 {len(images)} 張照片。")
     except Exception as e:
         st.error(f"OCR 失敗：{e}")
@@ -1626,6 +1629,33 @@ if st.button("🔍 開始 OCR 辨識",type="primary",disabled=not images):
 if st.session_state.ocr_df is not None:
     st.header("② 確認／修改資料")
     st.info("可以直接點表格修改。新廠商請填入『廠商名稱＋廠商代碼』，產生後會自動永久保存。")
+    first_row=st.session_state.ocr_df.iloc[0] if not st.session_state.ocr_df.empty else {}
+    first_vendor=first_row.get("廠商","")
+    first_vendor_code=first_row.get("廠商代碼","")
+    batch_vendor_default="" if pd.isna(first_vendor) else str(first_vendor).strip()
+    batch_code_default="" if pd.isna(first_vendor_code) else str(first_vendor_code).strip()
+    bv1,bv2,bv3=st.columns([2,1,1])
+    with bv1:
+        batch_vendor=st.text_input(
+            "本批廠商名稱",value=batch_vendor_default,key=f"{brand}_batch_vendor"
+        )
+    with bv2:
+        batch_vendor_code=st.text_input(
+            "本批廠商代碼",value=batch_code_default,key=f"{brand}_batch_vendor_code"
+        )
+    with bv3:
+        st.write("")
+        apply_batch_vendor=st.button("套用本批全部資料",key=f"{brand}_apply_batch_vendor")
+    if apply_batch_vendor:
+        if not batch_vendor.strip() or not batch_vendor_code.strip():
+            st.error("請同時輸入本批廠商名稱與廠商代碼。")
+        else:
+            batch_df=st.session_state.ocr_df.copy()
+            batch_df["廠商"]=batch_vendor.strip()
+            batch_df["廠商代碼"]=batch_vendor_code.strip()
+            st.session_state.ocr_df=batch_df
+            st.session_state.pop("editor",None)
+            st.success(f"已將廠商「{batch_vendor.strip()}」／代碼「{batch_vendor_code.strip()}」套用到本批全部資料。")
     editor_df=st.session_state.ocr_df.drop(columns=["OCR文字"],errors="ignore").copy()
     if "數量" in editor_df.columns:
         # OCR 未辨識時可能留下 None／文字，會讓 Streamlit 將整欄判定為混合格式並鎖住。
