@@ -234,12 +234,21 @@
       "vendor_code": "C64",
       "original": "7100",
       "price": 1080
+    },
+    "B41|510-1": {
+      "prefix11": "93000962188",
+      "sequence": 9,
+      "category": "長洋",
+      "category_code": "3",
+      "vendor_code": "B41",
+      "original": "510-1",
+      "price": 1880
     }
   },
   "next_sequence_by_category": {
     "1": 35,
     "2": 1,
-    "3": 9,
+    "3": 10,
     "4": 8,
     "5": 1,
     "6": 22,
