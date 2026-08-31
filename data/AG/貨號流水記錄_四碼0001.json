@@ -1,5 +1,5 @@
 {
-  "next_sequence": 63,
+  "next_sequence": 64,
   "assignments": {
     "597|2702-1": {
       "prefix11": "93000262188",
@@ -639,16 +639,52 @@
       "vendor_code": "B48",
       "original": "20715",
       "price": 1380
+    },
+    "145|6636": {
+      "prefix11": "96002762328",
+      "sequence": 27,
+      "category": "外套",
+      "category_code": "6",
+      "vendor_code": "145",
+      "original": "6636",
+      "price": 3280
+    },
+    "145|6753": {
+      "prefix11": "98001662128",
+      "sequence": 16,
+      "category": "套裝",
+      "category_code": "8",
+      "vendor_code": "145",
+      "original": "6753",
+      "price": 1280
+    },
+    "145|6718": {
+      "prefix11": "91006362158",
+      "sequence": 63,
+      "category": "上衣",
+      "category_code": "1",
+      "vendor_code": "145",
+      "original": "6718",
+      "price": 1580
+    },
+    "145|5807": {
+      "prefix11": "96002862168",
+      "sequence": 28,
+      "category": "外套",
+      "category_code": "6",
+      "vendor_code": "145",
+      "original": "5807",
+      "price": 1680
     }
   },
   "next_sequence_by_category": {
-    "1": 63,
+    "1": 64,
     "2": 1,
     "3": 10,
     "4": 12,
     "5": 10,
-    "6": 27,
+    "6": 29,
     "7": 1,
-    "8": 11
+    "8": 17
   }
 }
