@@ -144,13 +144,29 @@
       "category_code": "1",
       "vendor_code": "240",
       "original": "6902-1"
+    },
+    "995|6839": {
+      "base8": "64621010",
+      "sequence": 10,
+      "category": "褲子",
+      "category_code": "4",
+      "vendor_code": "995",
+      "original": "6839"
+    },
+    "995|6830": {
+      "base8": "64621011",
+      "sequence": 11,
+      "category": "褲子",
+      "category_code": "4",
+      "vendor_code": "995",
+      "original": "6830"
     }
   },
   "next_sequence_by_category": {
     "1": 32,
     "2": 1,
     "3": 1,
-    "4": 10,
+    "4": 12,
     "5": 6,
     "6": 1,
     "7": 1,
