@@ -1,5 +1,5 @@
 {
-  "next_sequence": 32,
+  "next_sequence": 37,
   "assignments": {
     "307|C-1556-1": {
       "base8": "61621016",
@@ -160,15 +160,63 @@
       "category_code": "4",
       "vendor_code": "995",
       "original": "6830"
+    },
+    "861|55611": {
+      "base8": "66621003",
+      "sequence": 3,
+      "category": "外套",
+      "category_code": "6",
+      "vendor_code": "861",
+      "original": "55611"
+    },
+    "861|55580": {
+      "base8": "61621032",
+      "sequence": 32,
+      "category": "上衣",
+      "category_code": "1",
+      "vendor_code": "861",
+      "original": "55580"
+    },
+    "861|55379": {
+      "base8": "61621033",
+      "sequence": 33,
+      "category": "上衣",
+      "category_code": "1",
+      "vendor_code": "861",
+      "original": "55379"
+    },
+    "861|55618": {
+      "base8": "61621034",
+      "sequence": 34,
+      "category": "上衣",
+      "category_code": "1",
+      "vendor_code": "861",
+      "original": "55618"
+    },
+    "861|55541": {
+      "base8": "61621035",
+      "sequence": 35,
+      "category": "上衣",
+      "category_code": "1",
+      "vendor_code": "861",
+      "original": "55541"
+    },
+    "861|55536": {
+      "base8": "61621036",
+      "sequence": 36,
+      "category": "上衣",
+      "category_code": "1",
+      "vendor_code": "861",
+      "original": "55536"
     }
   },
   "next_sequence_by_category": {
-    "1": 32,
+    "1": 37,
     "2": 1,
     "3": 1,
     "4": 12,
     "5": 6,
-    "6": 1,
+    "6": 4,
     "7": 1,
     "8": 1
   }
