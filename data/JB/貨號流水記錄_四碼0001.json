@@ -556,6 +556,69 @@
       "brand_code": "3",
       "vendor_code": "227",
       "original": "6176"
+    },
+    "C77|D678": {
+      "base8": "36001862",
+      "sequence": 18,
+      "category": "外套",
+      "category_code": "6",
+      "brand_code": "3",
+      "vendor_code": "C77",
+      "original": "D678"
+    },
+    "C77|609": {
+      "base8": "36001962",
+      "sequence": 19,
+      "category": "外套",
+      "category_code": "6",
+      "brand_code": "3",
+      "vendor_code": "C77",
+      "original": "609"
+    },
+    "C77|608": {
+      "base8": "36002062",
+      "sequence": 20,
+      "category": "外套",
+      "category_code": "6",
+      "brand_code": "3",
+      "vendor_code": "C77",
+      "original": "608"
+    },
+    "C77|D811": {
+      "base8": "36002162",
+      "sequence": 21,
+      "category": "外套",
+      "category_code": "6",
+      "brand_code": "3",
+      "vendor_code": "C77",
+      "original": "D811"
+    },
+    "C77|0673": {
+      "base8": "36002262",
+      "sequence": 22,
+      "category": "外套",
+      "category_code": "6",
+      "brand_code": "3",
+      "vendor_code": "C77",
+      "original": "0673"
+    },
+    "C77|138": {
+      "base8": "36002362",
+      "sequence": 23,
+      "category": "外套",
+      "category_code": "6",
+      "brand_code": "3",
+      "vendor_code": "C77",
+      "original": "138"
+    },
+    "C77|139": {
+      "base8": "36002462",
+      "sequence": 24,
+      "category": "外套",
+      "category_code": "6",
+      "brand_code": "3",
+      "vendor_code": "C77",
+      "original": "139"
     }
   },
   "next_sequence_by_category": {
@@ -564,7 +627,7 @@
     "2": 1,
     "3": 1,
     "4": 18,
-    "6": 17,
+    "6": 25,
     "7": 1,
     "8": 20
   }
