@@ -1248,7 +1248,7 @@ def create_master_workbook(df, template_bytes, code_by_key, color_map, brand_nam
                 "最後進價":safe_int(first["進價"], ""),
                 "特價":special_price,
                 "類別1":"08",
-                "類別2":clean(first.get("類別代碼", "")) if brand_name == "JB" else summary_parts[0],
+                "類別2":summary_parts[0],
                 "類別3":summary_parts[1],
                 "類別4":summary_parts[2],
                 "類別5":str(ccode),"尺碼代號":sizecode,
