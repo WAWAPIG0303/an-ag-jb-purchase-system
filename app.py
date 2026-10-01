@@ -1230,11 +1230,11 @@ def create_master_workbook(df, template_bytes, code_by_key, color_map, brand_nam
                 if brand_name == "AG" else ["", "", ""]
             )
             photo_price = safe_int(first.get("售價"), "")
-            double_price_brand = brand_name in ("AG", "JB")
+            double_price_brand = brand_name == "AG"
             master_price = photo_price * 2 if double_price_brand and isinstance(photo_price, int) else photo_price
             special_price = photo_price if brand_name == "AG" and isinstance(photo_price, int) else (master_price if brand_name == "JB" else "")
             note1 = f"特價{photo_price}" if double_price_brand and isinstance(photo_price, int) else ""
-            if brand_name == "AN":
+            if brand_name in ("AN", "JB"):
                 special_price = photo_price
                 note1 = f"特價{photo_price}" if isinstance(photo_price, int) else ""
             records.append({
@@ -1248,7 +1248,7 @@ def create_master_workbook(df, template_bytes, code_by_key, color_map, brand_nam
                 "最後進價":safe_int(first["進價"], ""),
                 "特價":special_price,
                 "類別1":"08",
-                "類別2":summary_parts[0],
+                "類別2":clean(first.get("類別代碼", "")) if brand_name == "JB" else summary_parts[0],
                 "類別3":summary_parts[1],
                 "類別4":summary_parts[2],
                 "類別5":str(ccode),"尺碼代號":sizecode,
