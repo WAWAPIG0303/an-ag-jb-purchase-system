@@ -727,6 +727,60 @@
       "brand_code": "3",
       "vendor_code": "C78",
       "original": "671"
+    },
+    "669|318": {
+      "base8": "36003362",
+      "sequence": 33,
+      "category": "外套",
+      "category_code": "6",
+      "brand_code": "3",
+      "vendor_code": "669",
+      "original": "318"
+    },
+    "669|9591": {
+      "base8": "36003462",
+      "sequence": 34,
+      "category": "外套",
+      "category_code": "6",
+      "brand_code": "3",
+      "vendor_code": "669",
+      "original": "9591"
+    },
+    "669|9596": {
+      "base8": "36003562",
+      "sequence": 35,
+      "category": "外套",
+      "category_code": "6",
+      "brand_code": "3",
+      "vendor_code": "669",
+      "original": "9596"
+    },
+    "669|M50": {
+      "base8": "36003662",
+      "sequence": 36,
+      "category": "外套",
+      "category_code": "6",
+      "brand_code": "3",
+      "vendor_code": "669",
+      "original": "M50"
+    },
+    "669|M71": {
+      "base8": "36003762",
+      "sequence": 37,
+      "category": "外套",
+      "category_code": "6",
+      "brand_code": "3",
+      "vendor_code": "669",
+      "original": "M71"
+    },
+    "669|M80": {
+      "base8": "36003862",
+      "sequence": 38,
+      "category": "外套",
+      "category_code": "6",
+      "brand_code": "3",
+      "vendor_code": "669",
+      "original": "M80"
     }
   },
   "next_sequence_by_category": {
@@ -735,7 +789,7 @@
     "2": 1,
     "3": 1,
     "4": 18,
-    "6": 33,
+    "6": 39,
     "7": 1,
     "8": 23
   }
