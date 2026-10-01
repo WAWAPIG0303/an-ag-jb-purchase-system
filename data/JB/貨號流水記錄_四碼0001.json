@@ -799,6 +799,15 @@
       "brand_code": "3",
       "vendor_code": "C82",
       "original": "6669下身"
+    },
+    "C83|6610": {
+      "base8": "34001862",
+      "sequence": 18,
+      "category": "褲子",
+      "category_code": "4",
+      "brand_code": "3",
+      "vendor_code": "C83",
+      "original": "6610"
     }
   },
   "next_sequence_by_category": {
@@ -806,7 +815,7 @@
     "1": 41,
     "2": 1,
     "3": 1,
-    "4": 18,
+    "4": 19,
     "6": 40,
     "7": 1,
     "8": 23
