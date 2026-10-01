@@ -907,10 +907,28 @@
       "brand_code": "3",
       "vendor_code": "C87",
       "original": "6322"
+    },
+    "C88|655": {
+      "base8": "35001362",
+      "sequence": 13,
+      "category": "裙子",
+      "category_code": "5",
+      "brand_code": "3",
+      "vendor_code": "C88",
+      "original": "655"
+    },
+    "C88|656": {
+      "base8": "35001462",
+      "sequence": 14,
+      "category": "裙子",
+      "category_code": "5",
+      "brand_code": "3",
+      "vendor_code": "C88",
+      "original": "656"
     }
   },
   "next_sequence_by_category": {
-    "5": 13,
+    "5": 15,
     "1": 43,
     "2": 1,
     "3": 1,
