@@ -1234,6 +1234,9 @@ def create_master_workbook(df, template_bytes, code_by_key, color_map, brand_nam
             master_price = photo_price * 2 if double_price_brand and isinstance(photo_price, int) else photo_price
             special_price = photo_price if brand_name == "AG" and isinstance(photo_price, int) else (master_price if brand_name == "JB" else "")
             note1 = f"特價{photo_price}" if double_price_brand and isinstance(photo_price, int) else ""
+            if brand_name == "AN":
+                special_price = photo_price
+                note1 = f"特價{photo_price}" if isinstance(photo_price, int) else ""
             records.append({
                 "商品型號":product_code,
                 # AG 品名規格使用前11碼（金額碼結尾）＋顏色名稱，不加入2碼顏色代碼。
