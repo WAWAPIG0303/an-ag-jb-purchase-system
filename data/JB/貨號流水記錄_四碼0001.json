@@ -988,12 +988,84 @@
       "brand_code": "3",
       "vendor_code": "C90",
       "original": "97921"
+    },
+    "144|83300": {
+      "base8": "32000162",
+      "sequence": 1,
+      "category": "短洋",
+      "category_code": "2",
+      "brand_code": "3",
+      "vendor_code": "144",
+      "original": "83300"
+    },
+    "144|87766": {
+      "base8": "32000262",
+      "sequence": 2,
+      "category": "短洋",
+      "category_code": "2",
+      "brand_code": "3",
+      "vendor_code": "144",
+      "original": "87766"
+    },
+    "144|91100上身": {
+      "base8": "31004462",
+      "sequence": 44,
+      "category": "上衣",
+      "category_code": "1",
+      "brand_code": "3",
+      "vendor_code": "144",
+      "original": "91100上身"
+    },
+    "144|92116上身": {
+      "base8": "31004562",
+      "sequence": 45,
+      "category": "上衣",
+      "category_code": "1",
+      "brand_code": "3",
+      "vendor_code": "144",
+      "original": "92116上身"
+    },
+    "144|98877上身": {
+      "base8": "31004662",
+      "sequence": 46,
+      "category": "上衣",
+      "category_code": "1",
+      "brand_code": "3",
+      "vendor_code": "144",
+      "original": "98877上身"
+    },
+    "144|91100下身": {
+      "base8": "35001562",
+      "sequence": 15,
+      "category": "裙子",
+      "category_code": "5",
+      "brand_code": "3",
+      "vendor_code": "144",
+      "original": "91100下身"
+    },
+    "144|92116下身": {
+      "base8": "35001662",
+      "sequence": 16,
+      "category": "裙子",
+      "category_code": "5",
+      "brand_code": "3",
+      "vendor_code": "144",
+      "original": "92116下身"
+    },
+    "144|98877": {
+      "base8": "35001762",
+      "sequence": 17,
+      "category": "裙子",
+      "category_code": "5",
+      "brand_code": "3",
+      "vendor_code": "144",
+      "original": "98877"
     }
   },
   "next_sequence_by_category": {
-    "5": 15,
-    "1": 44,
-    "2": 1,
+    "5": 18,
+    "1": 47,
+    "2": 3,
     "3": 1,
     "4": 22,
     "6": 51,
