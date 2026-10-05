@@ -1671,8 +1671,27 @@ def mark_manual_edits_as_final(df):
 # -------------------------
 # 日常操作：只上傳照片
 # -------------------------
+def start_new_batch():
+    """Clear batch widgets before rerendering; keep persistent configuration."""
+    st.session_state["ocr_df"] = None
+    st.session_state["generated_zip"] = None
+    for state_key in list(st.session_state.keys()):
+        key = str(state_key)
+        if key in ("editor", "images") or key.startswith("batch_images_"):
+            st.session_state.pop(state_key, None)
+        elif key.startswith(("AN_", "AG_", "JB_")) and any(
+            token in key for token in ("_batch_vendor", "_summary_", "_note2_", "_manual_variant_", "_manual_seq_", "_color_", "_shop_class_")
+        ):
+            st.session_state.pop(state_key, None)
+        elif key.startswith(("shop_vip_", "shop_vvip_", "shop_svip_")):
+            st.session_state.pop(state_key, None)
+    st.session_state["batch_upload_version"] = st.session_state.get("batch_upload_version", 0) + 1
+
+st.button("🔄 開始新一批", on_click=start_new_batch, key="start_new_batch")
+st.caption("先下載本批檔案再開始新一批；按下後會清除照片與本批資料。季別、貨號共用設定及已儲存的流水號紀錄會保留。")
+
 st.header("① 上傳商品照片")
-images=st.file_uploader("可一次選多張 JPG / PNG / WEBP",type=["jpg","jpeg","png","webp"],accept_multiple_files=True,key="images")
+images=st.file_uploader("可一次選多張 JPG / PNG / WEBP",type=["jpg","jpeg","png","webp"],accept_multiple_files=True,key=f"batch_images_{brand}_{st.session_state.get('batch_upload_version', 0)}")
 
 if st.button("🔍 開始 OCR 辨識",type="primary",disabled=not images):
     try:
