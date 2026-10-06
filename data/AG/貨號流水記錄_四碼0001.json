@@ -1,5 +1,5 @@
 {
-  "next_sequence": 76,
+  "next_sequence": 90,
   "assignments": {
     "597|2702-1": {
       "prefix11": "93000262188",
@@ -981,13 +981,166 @@
       "vendor_code": "130",
       "original": "S607",
       "price": 1780
+    },
+    "B48|13931": {
+      "prefix11": "91007662118",
+      "sequence": 76,
+      "category": "上衣",
+      "category_code": "1",
+      "vendor_code": "B48",
+      "original": "13931",
+      "price": 1180
+    },
+    "B48|13955": {
+      "prefix11": "91007762128",
+      "sequence": 77,
+      "category": "上衣",
+      "category_code": "1",
+      "vendor_code": "B48",
+      "original": "13955",
+      "price": 1280
+    },
+    "B48|13958": {
+      "prefix11": "91007862128",
+      "sequence": 78,
+      "category": "上衣",
+      "category_code": "1",
+      "vendor_code": "B48",
+      "original": "13958",
+      "price": 1280
+    },
+    "B48|13981": {
+      "prefix11": "94001362138",
+      "sequence": 13,
+      "category": "褲子",
+      "category_code": "4",
+      "vendor_code": "B48",
+      "original": "13981",
+      "price": 1380
+    },
+    "B48|13996": {
+      "prefix11": "91007962128",
+      "sequence": 79,
+      "category": "上衣",
+      "category_code": "1",
+      "vendor_code": "B48",
+      "original": "13996",
+      "price": 1280
+    },
+    "B48|15021": {
+      "prefix11": "91008062108",
+      "sequence": 80,
+      "category": "上衣",
+      "category_code": "1",
+      "vendor_code": "B48",
+      "original": "15021",
+      "price": 1080
+    },
+    "B48|20710": {
+      "prefix11": "91008162128",
+      "sequence": 81,
+      "category": "上衣",
+      "category_code": "1",
+      "vendor_code": "B48",
+      "original": "20710",
+      "price": 1280
+    },
+    "B48|20712": {
+      "prefix11": "91008262118",
+      "sequence": 82,
+      "category": "上衣",
+      "category_code": "1",
+      "vendor_code": "B48",
+      "original": "20712",
+      "price": 1180
+    },
+    "B48|20738": {
+      "prefix11": "91008362118",
+      "sequence": 83,
+      "category": "上衣",
+      "category_code": "1",
+      "vendor_code": "B48",
+      "original": "20738",
+      "price": 1180
+    },
+    "B48|20755": {
+      "prefix11": "94001462138",
+      "sequence": 14,
+      "category": "褲子",
+      "category_code": "4",
+      "vendor_code": "B48",
+      "original": "20755",
+      "price": 1380
+    },
+    "B48|20757": {
+      "prefix11": "94001562138",
+      "sequence": 15,
+      "category": "褲子",
+      "category_code": "4",
+      "vendor_code": "B48",
+      "original": "20757",
+      "price": 1380
+    },
+    "B48|20759": {
+      "prefix11": "91008462128",
+      "sequence": 84,
+      "category": "上衣",
+      "category_code": "1",
+      "vendor_code": "B48",
+      "original": "20759",
+      "price": 1280
+    },
+    "B48|20770": {
+      "prefix11": "91008562118",
+      "sequence": 85,
+      "category": "上衣",
+      "category_code": "1",
+      "vendor_code": "B48",
+      "original": "20770",
+      "price": 1180
+    },
+    "B48|20773": {
+      "prefix11": "91008662128",
+      "sequence": 86,
+      "category": "上衣",
+      "category_code": "1",
+      "vendor_code": "B48",
+      "original": "20773",
+      "price": 1280
+    },
+    "B48|20780": {
+      "prefix11": "91008762128",
+      "sequence": 87,
+      "category": "上衣",
+      "category_code": "1",
+      "vendor_code": "B48",
+      "original": "20780",
+      "price": 1280
+    },
+    "B48|20781": {
+      "prefix11": "91008862118",
+      "sequence": 88,
+      "category": "上衣",
+      "category_code": "1",
+      "vendor_code": "B48",
+      "original": "20781",
+      "price": 1180
+    },
+    "B48|20785": {
+      "prefix11": "91008962128",
+      "sequence": 89,
+      "category": "上衣",
+      "category_code": "1",
+      "vendor_code": "B48",
+      "original": "20785",
+      "price": 1280
     }
   },
   "next_sequence_by_category": {
-    "1": 76,
+    "1": 90,
     "2": 1,
     "3": 10,
-    "4": 13,
+    "4": 16,
     "5": 10,
     "6": 56,
     "7": 1,
