@@ -1,5 +1,5 @@
 {
-  "next_sequence": 64,
+  "next_sequence": 65,
   "assignments": {
     "C60|1810": {
       "base8": "35000562",
@@ -1186,6 +1186,51 @@
       "brand_code": "3",
       "vendor_code": "C92",
       "original": "8350"
+    },
+    "A36|2610": {
+      "base8": "31004462",
+      "sequence": 44,
+      "category": "上衣",
+      "category_code": "1",
+      "brand_code": "3",
+      "vendor_code": "A36",
+      "original": "2610"
+    },
+    "A36|4206": {
+      "base8": "31004562",
+      "sequence": 45,
+      "category": "上衣",
+      "category_code": "1",
+      "brand_code": "3",
+      "vendor_code": "A36",
+      "original": "4206"
+    },
+    "A36|67150": {
+      "base8": "31004662",
+      "sequence": 46,
+      "category": "上衣",
+      "category_code": "1",
+      "brand_code": "3",
+      "vendor_code": "A36",
+      "original": "67150"
+    },
+    "A36|84466上身": {
+      "base8": "36006462",
+      "sequence": 64,
+      "category": "外套",
+      "category_code": "6",
+      "brand_code": "3",
+      "vendor_code": "A36",
+      "original": "84466上身"
+    },
+    "A36|884466下身": {
+      "base8": "34002262",
+      "sequence": 22,
+      "category": "褲子",
+      "category_code": "4",
+      "brand_code": "3",
+      "vendor_code": "A36",
+      "original": "884466下身"
     }
   },
   "next_sequence_by_category": {
@@ -1193,8 +1238,8 @@
     "1": 48,
     "2": 3,
     "3": 1,
-    "4": 22,
-    "6": 64,
+    "4": 23,
+    "6": 65,
     "7": 1,
     "8": 24
   }
