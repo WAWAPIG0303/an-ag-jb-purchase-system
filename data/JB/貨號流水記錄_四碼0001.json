@@ -1330,10 +1330,46 @@
       "brand_code": "3",
       "vendor_code": "572",
       "original": "Q08"
+    },
+    "C95|9038": {
+      "base8": "35001862",
+      "sequence": 18,
+      "category": "裙子",
+      "category_code": "5",
+      "brand_code": "3",
+      "vendor_code": "C95",
+      "original": "9038"
+    },
+    "C95|9052": {
+      "base8": "35001962",
+      "sequence": 19,
+      "category": "裙子",
+      "category_code": "5",
+      "brand_code": "3",
+      "vendor_code": "C95",
+      "original": "9052"
+    },
+    "C95|9071": {
+      "base8": "35002062",
+      "sequence": 20,
+      "category": "裙子",
+      "category_code": "5",
+      "brand_code": "3",
+      "vendor_code": "C95",
+      "original": "9071"
+    },
+    "C95|9073": {
+      "base8": "35002162",
+      "sequence": 21,
+      "category": "裙子",
+      "category_code": "5",
+      "brand_code": "3",
+      "vendor_code": "C95",
+      "original": "9073"
     }
   },
   "next_sequence_by_category": {
-    "5": 18,
+    "5": 22,
     "1": 56,
     "2": 3,
     "3": 1,
