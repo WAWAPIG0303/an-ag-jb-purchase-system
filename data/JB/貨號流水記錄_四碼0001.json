@@ -1519,11 +1519,47 @@
       "brand_code": "3",
       "vendor_code": "D02",
       "original": "219"
+    },
+    "B99|6030": {
+      "base8": "31005662",
+      "sequence": 56,
+      "category": "上衣",
+      "category_code": "1",
+      "brand_code": "3",
+      "vendor_code": "B99",
+      "original": "6030"
+    },
+    "B99|8900": {
+      "base8": "31005762",
+      "sequence": 57,
+      "category": "上衣",
+      "category_code": "1",
+      "brand_code": "3",
+      "vendor_code": "B99",
+      "original": "8900"
+    },
+    "B99|9266": {
+      "base8": "31005862",
+      "sequence": 58,
+      "category": "上衣",
+      "category_code": "1",
+      "brand_code": "3",
+      "vendor_code": "B99",
+      "original": "9266"
+    },
+    "B99|9300": {
+      "base8": "31005962",
+      "sequence": 59,
+      "category": "上衣",
+      "category_code": "1",
+      "brand_code": "3",
+      "vendor_code": "B99",
+      "original": "9300"
     }
   },
   "next_sequence_by_category": {
     "5": 28,
-    "1": 56,
+    "1": 60,
     "2": 3,
     "3": 1,
     "4": 24,
