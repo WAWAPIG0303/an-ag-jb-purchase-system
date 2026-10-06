@@ -1770,7 +1770,7 @@ if st.session_state.ocr_df is not None:
         # 統一轉成可留白的整數欄，讓使用者可直接補填或修改。
         editor_df["數量"]=pd.to_numeric(editor_df["數量"],errors="coerce").astype("Int64")
     locked_review_columns=["摘要"]
-    if brand in ("AN","JB"):
+    if brand in ("AN","AG","JB"):
         locked_review_columns.append("備註2")
     edited=st.data_editor(
         editor_df,
@@ -1830,8 +1830,8 @@ if st.session_state.ocr_df is not None:
         )
         edited.loc[same_product,"摘要"]=str(summary_value).strip()
 
-    # AN／JB 的備註2依款式輸入一次，同一原廠編號的所有顏色／尺寸共用。
-    if brand in ("AN","JB"):
+    # 三品牌備註2選填：同款所有顏色／尺寸共用。
+    if brand in ("AN","AG","JB"):
         note2_records=[]
         for (vendor_code,original),indexes in edited.groupby(
             ["廠商代碼","原廠編號"],sort=False
