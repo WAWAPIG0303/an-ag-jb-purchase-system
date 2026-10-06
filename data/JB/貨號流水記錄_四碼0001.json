@@ -1294,11 +1294,47 @@
       "brand_code": "3",
       "vendor_code": "c94",
       "original": "0057"
+    },
+    "572|2601": {
+      "base8": "31005262",
+      "sequence": 52,
+      "category": "上衣",
+      "category_code": "1",
+      "brand_code": "3",
+      "vendor_code": "572",
+      "original": "2601"
+    },
+    "572|3616": {
+      "base8": "31005362",
+      "sequence": 53,
+      "category": "上衣",
+      "category_code": "1",
+      "brand_code": "3",
+      "vendor_code": "572",
+      "original": "3616"
+    },
+    "572|5613": {
+      "base8": "31005462",
+      "sequence": 54,
+      "category": "上衣",
+      "category_code": "1",
+      "brand_code": "3",
+      "vendor_code": "572",
+      "original": "5613"
+    },
+    "572|Q08": {
+      "base8": "31005562",
+      "sequence": 55,
+      "category": "上衣",
+      "category_code": "1",
+      "brand_code": "3",
+      "vendor_code": "572",
+      "original": "Q08"
     }
   },
   "next_sequence_by_category": {
     "5": 18,
-    "1": 52,
+    "1": 56,
     "2": 3,
     "3": 1,
     "4": 23,
