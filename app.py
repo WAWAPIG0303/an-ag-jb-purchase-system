@@ -56,6 +56,22 @@ def clean(v):
         return ""
     return re.sub(r"\s+", "", str(v)).upper()
 
+def lookup_vendor_code(name, vendor_map):
+    """Match a saved supplier name without guessing similar suppliers."""
+    normalized = clean(name)
+    if not normalized:
+        return ""
+    codes = {str(code).strip() for saved_name, code in vendor_map.items()
+             if clean(saved_name) == normalized and str(code).strip()}
+    return next(iter(codes)) if len(codes) == 1 else ""
+
+
+def sync_batch_vendor_code(brand, vendor_map):
+    st.session_state[f"{brand}_batch_vendor_code"] = lookup_vendor_code(
+        st.session_state.get(f"{brand}_batch_vendor", ""), vendor_map
+    )
+
+
 def normalize_color(v):
     x = str(v or "").strip()
     return x[:-1] if x.endswith("色") else x
@@ -1222,13 +1238,8 @@ def create_master_workbook(df, template_bytes, code_by_key, color_map, brand_nam
                 product_code = base + str(ccode)
             else:
                 product_code = base + str(ccode)
-            summary_number = str(first.get("摘要", "") or "").strip()
-            if brand_name == "AG" and not re.fullmatch(r"\d{6}", summary_number):
-                raise ValueError(f"AG 原廠編號 {original} 的摘要必須是6位數字。")
-            summary_parts = (
-                [summary_number[0:2], summary_number[2:4], summary_number[4:6]]
-                if brand_name == "AG" else ["", "", ""]
-            )
+            # 摘要為自由文字備註，不拆入商品分類欄位。
+            summary_parts = ["", "", ""]
             photo_price = safe_int(first.get("售價"), "")
             double_price_brand = brand_name == "AG"
             master_price = photo_price * 2 if double_price_brand and isinstance(photo_price, int) else photo_price
@@ -1725,15 +1736,24 @@ if st.session_state.ocr_df is not None:
     bv1,bv2,bv3=st.columns([2,1,1])
     with bv1:
         batch_vendor=st.text_input(
-            "本批廠商名稱",value=batch_vendor_default,key=f"{brand}_batch_vendor"
+            "本批廠商名稱",value=batch_vendor_default,key=f"{brand}_batch_vendor",
+            on_change=sync_batch_vendor_code,args=(brand,vendor_map)
         )
+    known_vendor_code=lookup_vendor_code(batch_vendor,vendor_map)
+    if known_vendor_code:
+        st.session_state[f"{brand}_batch_vendor_code"]=known_vendor_code
     with bv2:
         batch_vendor_code=st.text_input(
-            "本批廠商代碼",value=batch_code_default,key=f"{brand}_batch_vendor_code"
+            "本批廠商代碼",value=batch_code_default,key=f"{brand}_batch_vendor_code",
+            disabled=bool(known_vendor_code)
         )
     with bv3:
         st.write("")
         apply_batch_vendor=st.button("套用本批全部資料",key=f"{brand}_apply_batch_vendor")
+    if known_vendor_code:
+        st.caption(f"已找到廠商代碼：{known_vendor_code}；按「套用本批全部資料」即可帶入。")
+    elif batch_vendor.strip():
+        st.caption("查無唯一對應廠商，請確認名稱；新廠商請手動輸入代碼。")
     if apply_batch_vendor:
         if not batch_vendor.strip() or not batch_vendor_code.strip():
             st.error("請同時輸入本批廠商名稱與廠商代碼。")
@@ -1795,8 +1815,7 @@ if st.session_state.ocr_df is not None:
         disabled=["廠商代碼","原廠編號"],
         column_config={
             "摘要":st.column_config.TextColumn(
-                "摘要（AG請填6位數字）" if brand=="AG" else "摘要",
-                max_chars=6 if brand=="AG" else None,
+                "摘要／中文備註" if brand=="AG" else "摘要",
             )
         },
         key=f"{brand}_summary_editor",
@@ -1940,8 +1959,9 @@ if st.session_state.ocr_df is not None:
             )
     for idx,row in edited.iterrows():
         vname=clean(row.get("廠商",""))
-        if vname in vendor_map and not str(row.get("廠商代碼","") or "").strip():
-            edited.at[idx,"廠商代碼"]=vendor_map[vname]
+        matched_vendor_code=lookup_vendor_code(vname,vendor_map)
+        if matched_vendor_code:
+            edited.at[idx,"廠商代碼"]=matched_vendor_code
         ccode=clean(row.get("類別代碼",""))
         if ccode in category_map:
             edited.at[idx,"類別"]=category_map[ccode]
@@ -2101,8 +2121,6 @@ if st.session_state.ocr_df is not None:
     if st.button(generate_label,type="primary"):
         try:
             required=["廠商","廠商代碼","原廠編號","類別代碼","類別","顏色","尺寸","進價","售價","數量"]
-            if brand == "AG":
-                required.append("摘要")
             problems=[]
             for i,row in edited.iterrows():
                 miss=[col for col in required if pd.isna(row.get(col)) or str(row.get(col)).strip()==""]
@@ -2123,11 +2141,6 @@ if st.session_state.ocr_df is not None:
             st.session_state.ocr_df = confirmed_df.copy()
 
             if brand == "AG":
-                bad = confirmed_df["摘要"].map(
-                    lambda v: not re.fullmatch(r"\d{6}", str(v or "").strip())
-                )
-                if bad.any():
-                    raise ValueError("AG 每一款的摘要都必須輸入6位數字，系統會每2碼分別帶入類別2、類別3、類別4。")
                 if not str(season or "").strip():
                     raise ValueError("請輸入 AG 商品基本資料的季別。")
 
