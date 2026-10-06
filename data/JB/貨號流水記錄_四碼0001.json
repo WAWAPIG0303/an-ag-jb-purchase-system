@@ -1,5 +1,5 @@
 {
-  "next_sequence": 68,
+  "next_sequence": 69,
   "assignments": {
     "C60|1810": {
       "base8": "35000562",
@@ -1420,6 +1420,24 @@
       "brand_code": "3",
       "vendor_code": "C96",
       "original": "9011下身"
+    },
+    "689|5136": {
+      "base8": "38003262",
+      "sequence": 32,
+      "category": "套裝",
+      "category_code": "8",
+      "brand_code": "3",
+      "vendor_code": "689",
+      "original": "5136"
+    },
+    "689|6806": {
+      "base8": "36006862",
+      "sequence": 68,
+      "category": "外套",
+      "category_code": "6",
+      "brand_code": "3",
+      "vendor_code": "689",
+      "original": "6806"
     }
   },
   "next_sequence_by_category": {
@@ -1428,8 +1446,8 @@
     "2": 3,
     "3": 1,
     "4": 23,
-    "6": 68,
+    "6": 69,
     "7": 1,
-    "8": 32
+    "8": 33
   }
 }
