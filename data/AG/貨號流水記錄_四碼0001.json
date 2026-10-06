@@ -891,6 +891,96 @@
       "vendor_code": "552",
       "original": "80967",
       "price": 1380
+    },
+    "130|1968-1": {
+      "prefix11": "96004662198",
+      "sequence": 46,
+      "category": "外套",
+      "category_code": "6",
+      "vendor_code": "130",
+      "original": "1968-1",
+      "price": 1980
+    },
+    "130|2222": {
+      "prefix11": "96004762198",
+      "sequence": 47,
+      "category": "外套",
+      "category_code": "6",
+      "vendor_code": "130",
+      "original": "2222",
+      "price": 1980
+    },
+    "130|A330": {
+      "prefix11": "96004862178",
+      "sequence": 48,
+      "category": "外套",
+      "category_code": "6",
+      "vendor_code": "130",
+      "original": "A330",
+      "price": 1780
+    },
+    "130|D820": {
+      "prefix11": "96004962198",
+      "sequence": 49,
+      "category": "外套",
+      "category_code": "6",
+      "vendor_code": "130",
+      "original": "D820",
+      "price": 1980
+    },
+    "130|M152": {
+      "prefix11": "96005062198",
+      "sequence": 50,
+      "category": "外套",
+      "category_code": "6",
+      "vendor_code": "130",
+      "original": "M152",
+      "price": 1980
+    },
+    "130|M549": {
+      "prefix11": "96005162248",
+      "sequence": 51,
+      "category": "外套",
+      "category_code": "6",
+      "vendor_code": "130",
+      "original": "M549",
+      "price": 2480
+    },
+    "130|6027": {
+      "prefix11": "96005262158",
+      "sequence": 52,
+      "category": "外套",
+      "category_code": "6",
+      "vendor_code": "130",
+      "original": "6027",
+      "price": 1580
+    },
+    "130|S480": {
+      "prefix11": "96005362198",
+      "sequence": 53,
+      "category": "外套",
+      "category_code": "6",
+      "vendor_code": "130",
+      "original": "S480",
+      "price": 1980
+    },
+    "130|S601": {
+      "prefix11": "96005462198",
+      "sequence": 54,
+      "category": "外套",
+      "category_code": "6",
+      "vendor_code": "130",
+      "original": "S601",
+      "price": 1980
+    },
+    "130|S607": {
+      "prefix11": "96005562178",
+      "sequence": 55,
+      "category": "外套",
+      "category_code": "6",
+      "vendor_code": "130",
+      "original": "S607",
+      "price": 1780
     }
   },
   "next_sequence_by_category": {
@@ -899,7 +989,7 @@
     "3": 10,
     "4": 13,
     "5": 10,
-    "6": 46,
+    "6": 56,
     "7": 1,
     "8": 17
   }
