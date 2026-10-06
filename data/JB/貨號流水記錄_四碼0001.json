@@ -1366,16 +1366,70 @@
       "brand_code": "3",
       "vendor_code": "C95",
       "original": "9073"
+    },
+    "C96|9006上身": {
+      "base8": "38002962",
+      "sequence": 29,
+      "category": "套裝",
+      "category_code": "8",
+      "brand_code": "3",
+      "vendor_code": "C96",
+      "original": "9006上身"
+    },
+    "C96|9009上身": {
+      "base8": "38003062",
+      "sequence": 30,
+      "category": "套裝",
+      "category_code": "8",
+      "brand_code": "3",
+      "vendor_code": "C96",
+      "original": "9009上身"
+    },
+    "C96|9011上身": {
+      "base8": "38003162",
+      "sequence": 31,
+      "category": "套裝",
+      "category_code": "8",
+      "brand_code": "3",
+      "vendor_code": "C96",
+      "original": "9011上身"
+    },
+    "C96|9006下身": {
+      "base8": "35002262",
+      "sequence": 22,
+      "category": "裙子",
+      "category_code": "5",
+      "brand_code": "3",
+      "vendor_code": "C96",
+      "original": "9006下身"
+    },
+    "C96|9009下身": {
+      "base8": "35002362",
+      "sequence": 23,
+      "category": "裙子",
+      "category_code": "5",
+      "brand_code": "3",
+      "vendor_code": "C96",
+      "original": "9009下身"
+    },
+    "C96|9011下身": {
+      "base8": "35002462",
+      "sequence": 24,
+      "category": "裙子",
+      "category_code": "5",
+      "brand_code": "3",
+      "vendor_code": "C96",
+      "original": "9011下身"
     }
   },
   "next_sequence_by_category": {
-    "5": 22,
+    "5": 25,
     "1": 56,
     "2": 3,
     "3": 1,
     "4": 23,
     "6": 68,
     "7": 1,
-    "8": 24
+    "8": 32
   }
 }
