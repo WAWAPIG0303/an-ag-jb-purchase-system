@@ -1510,10 +1510,19 @@
       "brand_code": "3",
       "vendor_code": "D01",
       "original": "A703"
+    },
+    "D02|219": {
+      "base8": "35002762",
+      "sequence": 27,
+      "category": "裙子",
+      "category_code": "5",
+      "brand_code": "3",
+      "vendor_code": "D02",
+      "original": "219"
     }
   },
   "next_sequence_by_category": {
-    "5": 27,
+    "5": 28,
     "1": 56,
     "2": 3,
     "3": 1,
