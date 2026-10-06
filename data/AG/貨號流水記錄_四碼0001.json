@@ -801,6 +801,33 @@
       "vendor_code": "130",
       "original": "6092",
       "price": 1980
+    },
+    "145|6866": {
+      "prefix11": "96004262536",
+      "sequence": 42,
+      "category": "外套",
+      "category_code": "6",
+      "vendor_code": "145",
+      "original": "6866",
+      "price": 5360
+    },
+    "145|6881": {
+      "prefix11": "96004362396",
+      "sequence": 43,
+      "category": "外套",
+      "category_code": "6",
+      "vendor_code": "145",
+      "original": "6881",
+      "price": 3960
+    },
+    "145|6909": {
+      "prefix11": "96004462496",
+      "sequence": 44,
+      "category": "外套",
+      "category_code": "6",
+      "vendor_code": "145",
+      "original": "6909",
+      "price": 4960
     }
   },
   "next_sequence_by_category": {
@@ -809,7 +836,7 @@
     "3": 10,
     "4": 12,
     "5": 10,
-    "6": 42,
+    "6": 45,
     "7": 1,
     "8": 17
   }
