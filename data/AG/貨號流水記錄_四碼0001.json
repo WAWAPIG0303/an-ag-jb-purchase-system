@@ -1539,6 +1539,24 @@
       "vendor_code": "D06",
       "original": "68806",
       "price": 1980
+    },
+    "330|658": {
+      "prefix11": "96007262198",
+      "sequence": 72,
+      "category": "外套",
+      "category_code": "6",
+      "vendor_code": "330",
+      "original": "658",
+      "price": 1980
+    },
+    "330|6110": {
+      "prefix11": "98002462198",
+      "sequence": 24,
+      "category": "套裝",
+      "category_code": "8",
+      "vendor_code": "330",
+      "original": "6110",
+      "price": 1980
     }
   },
   "next_sequence_by_category": {
@@ -1547,8 +1565,8 @@
     "3": 10,
     "4": 22,
     "5": 20,
-    "6": 72,
+    "6": 73,
     "7": 1,
-    "8": 24
+    "8": 25
   }
 }
