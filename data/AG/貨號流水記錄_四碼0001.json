@@ -1,5 +1,5 @@
 {
-  "next_sequence": 91,
+  "next_sequence": 94,
   "assignments": {
     "597|2702-1": {
       "prefix11": "93000262188",
@@ -1314,10 +1314,37 @@
       "vendor_code": "D04",
       "original": "jb147",
       "price": 1580
+    },
+    "B49|6613": {
+      "prefix11": "91009162128",
+      "sequence": 91,
+      "category": "上衣",
+      "category_code": "1",
+      "vendor_code": "B49",
+      "original": "6613",
+      "price": 1280
+    },
+    "B49|6638": {
+      "prefix11": "91009262128",
+      "sequence": 92,
+      "category": "上衣",
+      "category_code": "1",
+      "vendor_code": "B49",
+      "original": "6638",
+      "price": 1280
+    },
+    "B49|6717": {
+      "prefix11": "91009362128",
+      "sequence": 93,
+      "category": "上衣",
+      "category_code": "1",
+      "vendor_code": "B49",
+      "original": "6717",
+      "price": 1280
     }
   },
   "next_sequence_by_category": {
-    "1": 91,
+    "1": 94,
     "2": 1,
     "3": 10,
     "4": 22,
