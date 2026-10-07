@@ -1467,6 +1467,24 @@
       "vendor_code": "698",
       "original": "8726",
       "price": 1980
+    },
+    "A81|9802": {
+      "prefix11": "96007062148",
+      "sequence": 70,
+      "category": "外套",
+      "category_code": "6",
+      "vendor_code": "A81",
+      "original": "9802",
+      "price": 1480
+    },
+    "A81|9811": {
+      "prefix11": "96007162158",
+      "sequence": 71,
+      "category": "外套",
+      "category_code": "6",
+      "vendor_code": "A81",
+      "original": "9811",
+      "price": 1580
     }
   },
   "next_sequence_by_category": {
@@ -1475,7 +1493,7 @@
     "3": 10,
     "4": 22,
     "5": 20,
-    "6": 70,
+    "6": 72,
     "7": 1,
     "8": 18
   }
