@@ -1663,11 +1663,65 @@
       "brand_code": "3",
       "vendor_code": "698",
       "original": "8060"
+    },
+    "953|131": {
+      "base8": "31006062",
+      "sequence": 60,
+      "category": "上衣",
+      "category_code": "1",
+      "brand_code": "3",
+      "vendor_code": "953",
+      "original": "131"
+    },
+    "953|3363": {
+      "base8": "31006162",
+      "sequence": 61,
+      "category": "上衣",
+      "category_code": "1",
+      "brand_code": "3",
+      "vendor_code": "953",
+      "original": "3363"
+    },
+    "953|3541": {
+      "base8": "31006262",
+      "sequence": 62,
+      "category": "上衣",
+      "category_code": "1",
+      "brand_code": "3",
+      "vendor_code": "953",
+      "original": "3541"
+    },
+    "953|3548": {
+      "base8": "31006362",
+      "sequence": 63,
+      "category": "上衣",
+      "category_code": "1",
+      "brand_code": "3",
+      "vendor_code": "953",
+      "original": "3548"
+    },
+    "953|3590": {
+      "base8": "31006462",
+      "sequence": 64,
+      "category": "上衣",
+      "category_code": "1",
+      "brand_code": "3",
+      "vendor_code": "953",
+      "original": "3590"
+    },
+    "953|3547": {
+      "base8": "31006562",
+      "sequence": 65,
+      "category": "上衣",
+      "category_code": "1",
+      "brand_code": "3",
+      "vendor_code": "953",
+      "original": "3547"
     }
   },
   "next_sequence_by_category": {
     "5": 28,
-    "1": 60,
+    "1": 66,
     "2": 3,
     "3": 1,
     "4": 29,
