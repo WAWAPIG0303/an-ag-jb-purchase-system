@@ -1134,14 +1134,68 @@
       "vendor_code": "B48",
       "original": "20785",
       "price": 1280
+    },
+    "207|999": {
+      "prefix11": "95001062128",
+      "sequence": 10,
+      "category": "裙子",
+      "category_code": "5",
+      "vendor_code": "207",
+      "original": "999",
+      "price": 1280
+    },
+    "207|87031-1": {
+      "prefix11": "94001662138",
+      "sequence": 16,
+      "category": "褲子",
+      "category_code": "4",
+      "vendor_code": "207",
+      "original": "87031-1",
+      "price": 1380
+    },
+    "207|88097": {
+      "prefix11": "94001762138",
+      "sequence": 17,
+      "category": "褲子",
+      "category_code": "4",
+      "vendor_code": "207",
+      "original": "88097",
+      "price": 1380
+    },
+    "207|88099": {
+      "prefix11": "95001162128",
+      "sequence": 11,
+      "category": "裙子",
+      "category_code": "5",
+      "vendor_code": "207",
+      "original": "88099",
+      "price": 1280
+    },
+    "207|88115": {
+      "prefix11": "94001862138",
+      "sequence": 18,
+      "category": "褲子",
+      "category_code": "4",
+      "vendor_code": "207",
+      "original": "88115",
+      "price": 1380
+    },
+    "207|96018": {
+      "prefix11": "94001962138",
+      "sequence": 19,
+      "category": "褲子",
+      "category_code": "4",
+      "vendor_code": "207",
+      "original": "96018",
+      "price": 1380
     }
   },
   "next_sequence_by_category": {
     "1": 90,
     "2": 1,
     "3": 10,
-    "4": 16,
-    "5": 10,
+    "4": 20,
+    "5": 12,
     "6": 56,
     "7": 1,
     "8": 17
