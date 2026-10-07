@@ -1557,6 +1557,15 @@
       "vendor_code": "330",
       "original": "6110",
       "price": 1980
+    },
+    "698|806": {
+      "prefix11": "96007362168",
+      "sequence": 73,
+      "category": "外套",
+      "category_code": "6",
+      "vendor_code": "698",
+      "original": "806",
+      "price": 1680
     }
   },
   "next_sequence_by_category": {
@@ -1565,7 +1574,7 @@
     "3": 10,
     "4": 22,
     "5": 20,
-    "6": 73,
+    "6": 74,
     "7": 1,
     "8": 25
   }
