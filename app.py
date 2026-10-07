@@ -1365,6 +1365,9 @@ def create_shopline_workbook(df, code_by_key, color_map, classifications, suppli
                 raise ValueError(f"顏色「{color}」沒有2碼顏色代號。")
             barcode=f"{base}{color_code}{size}"
             row=[None]*64
+            row[SHOP_HEADERS_ZH.index("預購功能")] = "Y"
+            row[SHOP_HEADERS_ZH.index("預購商品可無限供貨")] = "N"
+            row[SHOP_HEADERS_ZH.index("預購上限")] = 2
             row[0]=base; row[2]=base
             row[18]="Y" if first_variant else None
             row[19]=SHOP_PUBLIC_IMAGE if first_variant else None
