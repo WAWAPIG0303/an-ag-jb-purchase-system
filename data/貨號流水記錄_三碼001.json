@@ -248,6 +248,14 @@
       "category_code": "1",
       "vendor_code": "B68",
       "original": "8153"
+    },
+    "A24|W102": {
+      "base8": "66622007",
+      "sequence": 7,
+      "category": "外套",
+      "category_code": "6",
+      "vendor_code": "A24",
+      "original": "W102"
     }
   },
   "next_sequence_by_category": {
@@ -256,7 +264,7 @@
     "3": 1,
     "4": 12,
     "5": 6,
-    "6": 7,
+    "6": 8,
     "7": 1,
     "8": 1
   }
