@@ -1485,6 +1485,60 @@
       "vendor_code": "A81",
       "original": "9811",
       "price": 1580
+    },
+    "D06|2888": {
+      "prefix11": "98001862198",
+      "sequence": 18,
+      "category": "套裝",
+      "category_code": "8",
+      "vendor_code": "D06",
+      "original": "2888",
+      "price": 1980
+    },
+    "D06|9866": {
+      "prefix11": "98001962198",
+      "sequence": 19,
+      "category": "套裝",
+      "category_code": "8",
+      "vendor_code": "D06",
+      "original": "9866",
+      "price": 1980
+    },
+    "D06|25120": {
+      "prefix11": "98002062198",
+      "sequence": 20,
+      "category": "套裝",
+      "category_code": "8",
+      "vendor_code": "D06",
+      "original": "25120",
+      "price": 1980
+    },
+    "D06|28837": {
+      "prefix11": "98002162188",
+      "sequence": 21,
+      "category": "套裝",
+      "category_code": "8",
+      "vendor_code": "D06",
+      "original": "28837",
+      "price": 1880
+    },
+    "D06|58039": {
+      "prefix11": "98002262198",
+      "sequence": 22,
+      "category": "套裝",
+      "category_code": "8",
+      "vendor_code": "D06",
+      "original": "58039",
+      "price": 1980
+    },
+    "D06|68806": {
+      "prefix11": "98002362198",
+      "sequence": 23,
+      "category": "套裝",
+      "category_code": "8",
+      "vendor_code": "D06",
+      "original": "68806",
+      "price": 1980
     }
   },
   "next_sequence_by_category": {
@@ -1495,6 +1549,6 @@
     "5": 20,
     "6": 72,
     "7": 1,
-    "8": 18
+    "8": 24
   }
 }
