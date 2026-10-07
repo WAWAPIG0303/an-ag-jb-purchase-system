@@ -1188,14 +1188,104 @@
       "vendor_code": "207",
       "original": "96018",
       "price": 1380
+    },
+    "331|2605": {
+      "prefix11": "95001262138",
+      "sequence": 12,
+      "category": "裙子",
+      "category_code": "5",
+      "vendor_code": "331",
+      "original": "2605",
+      "price": 1380
+    },
+    "331|2609": {
+      "prefix11": "95001362138",
+      "sequence": 13,
+      "category": "裙子",
+      "category_code": "5",
+      "vendor_code": "331",
+      "original": "2609",
+      "price": 1380
+    },
+    "331|2610": {
+      "prefix11": "95001462138",
+      "sequence": 14,
+      "category": "裙子",
+      "category_code": "5",
+      "vendor_code": "331",
+      "original": "2610",
+      "price": 1380
+    },
+    "331|2611": {
+      "prefix11": "95001562128",
+      "sequence": 15,
+      "category": "裙子",
+      "category_code": "5",
+      "vendor_code": "331",
+      "original": "2611",
+      "price": 1280
+    },
+    "331|2631": {
+      "prefix11": "95001662138",
+      "sequence": 16,
+      "category": "裙子",
+      "category_code": "5",
+      "vendor_code": "331",
+      "original": "2631",
+      "price": 1380
+    },
+    "331|5001": {
+      "prefix11": "95001762128",
+      "sequence": 17,
+      "category": "裙子",
+      "category_code": "5",
+      "vendor_code": "331",
+      "original": "5001",
+      "price": 1280
+    },
+    "331|5002": {
+      "prefix11": "95001862128",
+      "sequence": 18,
+      "category": "裙子",
+      "category_code": "5",
+      "vendor_code": "331",
+      "original": "5002",
+      "price": 1280
+    },
+    "331|8006": {
+      "prefix11": "94002062138",
+      "sequence": 20,
+      "category": "褲子",
+      "category_code": "4",
+      "vendor_code": "331",
+      "original": "8006",
+      "price": 1380
+    },
+    "331|8561": {
+      "prefix11": "95001962138",
+      "sequence": 19,
+      "category": "裙子",
+      "category_code": "5",
+      "vendor_code": "331",
+      "original": "8561",
+      "price": 1380
+    },
+    "331|55032": {
+      "prefix11": "94002162138",
+      "sequence": 21,
+      "category": "褲子",
+      "category_code": "4",
+      "vendor_code": "331",
+      "original": "55032",
+      "price": 1380
     }
   },
   "next_sequence_by_category": {
     "1": 90,
     "2": 1,
     "3": 10,
-    "4": 20,
-    "5": 12,
+    "4": 22,
+    "5": 20,
     "6": 56,
     "7": 1,
     "8": 17
