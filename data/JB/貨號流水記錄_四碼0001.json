@@ -1555,6 +1555,33 @@
       "brand_code": "3",
       "vendor_code": "B99",
       "original": "9300"
+    },
+    "D03|5159": {
+      "base8": "38003362",
+      "sequence": 33,
+      "category": "套裝",
+      "category_code": "8",
+      "brand_code": "3",
+      "vendor_code": "D03",
+      "original": "5159"
+    },
+    "D03|51120": {
+      "base8": "38003462",
+      "sequence": 34,
+      "category": "套裝",
+      "category_code": "8",
+      "brand_code": "3",
+      "vendor_code": "D03",
+      "original": "51120"
+    },
+    "D03|61407": {
+      "base8": "38003562",
+      "sequence": 35,
+      "category": "套裝",
+      "category_code": "8",
+      "brand_code": "3",
+      "vendor_code": "D03",
+      "original": "61407"
     }
   },
   "next_sequence_by_category": {
@@ -1565,6 +1592,6 @@
     "4": 24,
     "6": 74,
     "7": 1,
-    "8": 33
+    "8": 36
   }
 }
