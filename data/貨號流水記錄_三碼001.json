@@ -1,5 +1,5 @@
 {
-  "next_sequence": 54,
+  "next_sequence": 55,
   "assignments": {
     "307|C-1556-1": {
       "base8": "61621016",
@@ -328,10 +328,18 @@
       "category_code": "4",
       "vendor_code": "219",
       "original": "12513"
+    },
+    "C42|2819": {
+      "base8": "61622054",
+      "sequence": 54,
+      "category": "上衣",
+      "category_code": "1",
+      "vendor_code": "C42",
+      "original": "2819"
     }
   },
   "next_sequence_by_category": {
-    "1": 54,
+    "1": 55,
     "2": 1,
     "3": 1,
     "4": 14,
