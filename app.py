@@ -1367,7 +1367,7 @@ def create_shopline_workbook(df, code_by_key, color_map, classifications, suppli
             row=[None]*64
             row[SHOP_HEADERS_ZH.index("預購功能")] = "Y" if first_variant else None
             row[SHOP_HEADERS_ZH.index("預購商品可無限供貨")] = "N" if first_variant else None
-            row[SHOP_HEADERS_ZH.index("預購上限")] = 2 if first_variant else None
+            row[SHOP_HEADERS_ZH.index("預購上限")] = None
             row[0]=base; row[2]=base
             row[18]="Y" if first_variant else None
             row[19]=SHOP_PUBLIC_IMAGE if first_variant else None
@@ -1380,7 +1380,7 @@ def create_shopline_workbook(df, code_by_key, color_map, classifications, suppli
             row[38]=product_tag if first_variant else None
             row[43]="顏色"; row[45]="尺寸"
             row[48]=color; row[50]=size
-            row[51]=None  # SHOP 商品數量留白
+            row[51]=2  # SHOP 商品數量固定為2
             row[52]=price; row[54]=price
             row[57]=vip; row[58]=vvip; row[59]=svip
             row[60]=cost; row[61]=base; row[63]=barcode
