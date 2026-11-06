@@ -432,6 +432,14 @@
       "category_code": "4",
       "vendor_code": "D12",
       "original": "2579"
+    },
+    "548|X690+X880": {
+      "base8": "65623007",
+      "sequence": 7,
+      "category": "裙子",
+      "category_code": "5",
+      "vendor_code": "548",
+      "original": "X690+X880"
     }
   },
   "next_sequence_by_category": {
@@ -439,7 +447,7 @@
     "2": 1,
     "3": 1,
     "4": 16,
-    "5": 6,
+    "5": 8,
     "6": 9,
     "7": 1,
     "8": 1
