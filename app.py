@@ -1339,8 +1339,8 @@ def create_shopline_workbook(df, code_by_key, color_map, classifications, suppli
             barcode=f"{base}{color_code}{size}"
             row=[None]*len(SHOP_HEADERS_ZH)
             row[SHOP_HEADERS_ZH.index("數量")] = 0
-            row[SHOP_HEADERS_ZH.index("預購功能")] = "Y"
-            row[SHOP_HEADERS_ZH.index("預購商品可無限供貨")] = "N"
+            row[SHOP_HEADERS_ZH.index("預購功能")] = "Y" if first_variant else None
+            row[SHOP_HEADERS_ZH.index("預購商品可無限供貨")] = "N" if first_variant else None
             row[SHOP_HEADERS_ZH.index("預購上限")] = 2
             row[SHOP_HEADERS_ZH.index('商品編號*')]=base; row[SHOP_HEADERS_ZH.index('商品名稱(繁體中文)*')]=base
             row[SHOP_HEADERS_ZH.index('實體店上架狀態')]="Y" if first_variant else None
