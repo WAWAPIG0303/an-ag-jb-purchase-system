@@ -424,13 +424,21 @@
       "category_code": "1",
       "vendor_code": "807",
       "original": "J200"
+    },
+    "D12|2579": {
+      "base8": "64623015",
+      "sequence": 15,
+      "category": "褲子",
+      "category_code": "4",
+      "vendor_code": "D12",
+      "original": "2579"
     }
   },
   "next_sequence_by_category": {
     "1": 67,
     "2": 1,
     "3": 1,
-    "4": 15,
+    "4": 16,
     "5": 6,
     "6": 9,
     "7": 1,
