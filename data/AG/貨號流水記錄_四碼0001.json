@@ -1737,6 +1737,24 @@
       "vendor_code": "D17",
       "original": "16",
       "price": 1380
+    },
+    "486|1039": {
+      "prefix11": "96008662138",
+      "sequence": 86,
+      "category": "外套",
+      "category_code": "6",
+      "vendor_code": "486",
+      "original": "1039",
+      "price": 1380
+    },
+    "486|1102": {
+      "prefix11": "96008762198",
+      "sequence": 87,
+      "category": "外套",
+      "category_code": "6",
+      "vendor_code": "486",
+      "original": "1102",
+      "price": 1980
     }
   },
   "next_sequence_by_category": {
@@ -1745,7 +1763,7 @@
     "3": 11,
     "4": 22,
     "5": 20,
-    "6": 86,
+    "6": 88,
     "7": 1,
     "8": 28
   }
