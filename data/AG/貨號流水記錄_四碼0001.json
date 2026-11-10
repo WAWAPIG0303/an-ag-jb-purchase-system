@@ -1611,6 +1611,24 @@
       "vendor_code": "A80",
       "original": "7318",
       "price": 1980
+    },
+    "D15|1597-5": {
+      "prefix11": "98002662188",
+      "sequence": 26,
+      "category": "套裝",
+      "category_code": "8",
+      "vendor_code": "D15",
+      "original": "1597-5",
+      "price": 1880
+    },
+    "D15|9713-1": {
+      "prefix11": "98002762188",
+      "sequence": 27,
+      "category": "套裝",
+      "category_code": "8",
+      "vendor_code": "D15",
+      "original": "9713-1",
+      "price": 1880
     }
   },
   "next_sequence_by_category": {
@@ -1621,6 +1639,6 @@
     "5": 20,
     "6": 77,
     "7": 1,
-    "8": 26
+    "8": 28
   }
 }
