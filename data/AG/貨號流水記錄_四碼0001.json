@@ -1755,6 +1755,15 @@
       "vendor_code": "486",
       "original": "1102",
       "price": 1980
+    },
+    "D18|312": {
+      "prefix11": "96008862198",
+      "sequence": 88,
+      "category": "外套",
+      "category_code": "6",
+      "vendor_code": "D18",
+      "original": "312",
+      "price": 1980
     }
   },
   "next_sequence_by_category": {
@@ -1763,7 +1772,7 @@
     "3": 11,
     "4": 22,
     "5": 20,
-    "6": 88,
+    "6": 89,
     "7": 1,
     "8": 28
   }
