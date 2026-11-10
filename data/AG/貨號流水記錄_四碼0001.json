@@ -1593,6 +1593,15 @@
       "vendor_code": "D13",
       "original": "8105",
       "price": 1680
+    },
+    "D14|1860": {
+      "prefix11": "96007562368",
+      "sequence": 75,
+      "category": "外套",
+      "category_code": "6",
+      "vendor_code": "D14",
+      "original": "1860",
+      "price": 3680
     }
   },
   "next_sequence_by_category": {
@@ -1601,7 +1610,7 @@
     "3": 10,
     "4": 22,
     "5": 20,
-    "6": 74,
+    "6": 76,
     "7": 1,
     "8": 26
   }
