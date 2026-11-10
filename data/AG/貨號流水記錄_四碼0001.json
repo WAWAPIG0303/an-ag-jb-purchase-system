@@ -1638,6 +1638,78 @@
       "vendor_code": "D16",
       "original": "2630",
       "price": 1680
+    },
+    "798|26803": {
+      "prefix11": "96007762168",
+      "sequence": 77,
+      "category": "外套",
+      "category_code": "6",
+      "vendor_code": "798",
+      "original": "26803",
+      "price": 1680
+    },
+    "798|26809": {
+      "prefix11": "96007862168",
+      "sequence": 78,
+      "category": "外套",
+      "category_code": "6",
+      "vendor_code": "798",
+      "original": "26809",
+      "price": 1680
+    },
+    "798|26835": {
+      "prefix11": "96007962268",
+      "sequence": 79,
+      "category": "外套",
+      "category_code": "6",
+      "vendor_code": "798",
+      "original": "26835",
+      "price": 2680
+    },
+    "798|26853": {
+      "prefix11": "96008062248",
+      "sequence": 80,
+      "category": "外套",
+      "category_code": "6",
+      "vendor_code": "798",
+      "original": "26853",
+      "price": 2480
+    },
+    "798|26855": {
+      "prefix11": "96008162288",
+      "sequence": 81,
+      "category": "外套",
+      "category_code": "6",
+      "vendor_code": "798",
+      "original": "26855",
+      "price": 2880
+    },
+    "798|26856": {
+      "prefix11": "96008262268",
+      "sequence": 82,
+      "category": "外套",
+      "category_code": "6",
+      "vendor_code": "798",
+      "original": "26856",
+      "price": 2680
+    },
+    "798|26857": {
+      "prefix11": "96008362248",
+      "sequence": 83,
+      "category": "外套",
+      "category_code": "6",
+      "vendor_code": "798",
+      "original": "26857",
+      "price": 2480
+    },
+    "798|26860": {
+      "prefix11": "96008462268",
+      "sequence": 84,
+      "category": "外套",
+      "category_code": "6",
+      "vendor_code": "798",
+      "original": "26860",
+      "price": 2680
     }
   },
   "next_sequence_by_category": {
@@ -1646,7 +1718,7 @@
     "3": 11,
     "4": 22,
     "5": 20,
-    "6": 77,
+    "6": 85,
     "7": 1,
     "8": 28
   }
