@@ -1872,6 +1872,15 @@
       "vendor_code": "D19",
       "original": "693",
       "price": 1880
+    },
+    "187|11393": {
+      "prefix11": "96009862168",
+      "sequence": 98,
+      "category": "外套",
+      "category_code": "6",
+      "vendor_code": "187",
+      "original": "11393",
+      "price": 1680
     }
   },
   "next_sequence_by_category": {
@@ -1880,7 +1889,7 @@
     "3": 11,
     "4": 24,
     "5": 20,
-    "6": 98,
+    "6": 99,
     "7": 1,
     "8": 29
   }
