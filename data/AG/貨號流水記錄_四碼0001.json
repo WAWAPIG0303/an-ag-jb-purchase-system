@@ -1836,6 +1836,15 @@
       "vendor_code": "A79",
       "original": "7739",
       "price": 3280
+    },
+    "C90|99088": {
+      "prefix11": "96009762248",
+      "sequence": 97,
+      "category": "外套",
+      "category_code": "6",
+      "vendor_code": "C90",
+      "original": "99088",
+      "price": 2480
     }
   },
   "next_sequence_by_category": {
@@ -1844,7 +1853,7 @@
     "3": 11,
     "4": 22,
     "5": 20,
-    "6": 97,
+    "6": 98,
     "7": 1,
     "8": 28
   }
