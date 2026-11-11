@@ -1863,6 +1863,15 @@
       "vendor_code": "B90",
       "original": "267826",
       "price": 1480
+    },
+    "D19|693": {
+      "prefix11": "98002862188",
+      "sequence": 28,
+      "category": "套裝",
+      "category_code": "8",
+      "vendor_code": "D19",
+      "original": "693",
+      "price": 1880
     }
   },
   "next_sequence_by_category": {
@@ -1873,6 +1882,6 @@
     "5": 20,
     "6": 98,
     "7": 1,
-    "8": 28
+    "8": 29
   }
 }
