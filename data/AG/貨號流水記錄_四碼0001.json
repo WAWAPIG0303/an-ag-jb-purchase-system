@@ -1764,6 +1764,42 @@
       "vendor_code": "D18",
       "original": "312",
       "price": 1980
+    },
+    "145|5893": {
+      "prefix11": "96008962228",
+      "sequence": 89,
+      "category": "外套",
+      "category_code": "6",
+      "vendor_code": "145",
+      "original": "5893",
+      "price": 2280
+    },
+    "145|5902": {
+      "prefix11": "96009062328",
+      "sequence": 90,
+      "category": "外套",
+      "category_code": "6",
+      "vendor_code": "145",
+      "original": "5902",
+      "price": 3280
+    },
+    "145|5903": {
+      "prefix11": "96009162228",
+      "sequence": 91,
+      "category": "外套",
+      "category_code": "6",
+      "vendor_code": "145",
+      "original": "5903",
+      "price": 2280
+    },
+    "145|6900": {
+      "prefix11": "96009262268",
+      "sequence": 92,
+      "category": "外套",
+      "category_code": "6",
+      "vendor_code": "145",
+      "original": "6900",
+      "price": 2680
     }
   },
   "next_sequence_by_category": {
@@ -1772,7 +1808,7 @@
     "3": 11,
     "4": 22,
     "5": 20,
-    "6": 89,
+    "6": 93,
     "7": 1,
     "8": 28
   }
