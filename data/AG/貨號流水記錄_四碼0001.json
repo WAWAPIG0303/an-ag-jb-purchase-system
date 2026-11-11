@@ -1845,13 +1845,22 @@
       "vendor_code": "C90",
       "original": "99088",
       "price": 2480
+    },
+    "A62|6192": {
+      "prefix11": "94002262138",
+      "sequence": 22,
+      "category": "褲子",
+      "category_code": "4",
+      "vendor_code": "A62",
+      "original": "6192",
+      "price": 1380
     }
   },
   "next_sequence_by_category": {
     "1": 100,
     "2": 1,
     "3": 11,
-    "4": 22,
+    "4": 23,
     "5": 20,
     "6": 98,
     "7": 1,
