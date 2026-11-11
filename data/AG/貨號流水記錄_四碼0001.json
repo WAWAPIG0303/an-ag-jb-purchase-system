@@ -1800,6 +1800,42 @@
       "vendor_code": "145",
       "original": "6900",
       "price": 2680
+    },
+    "A79|5522": {
+      "prefix11": "96009362228",
+      "sequence": 93,
+      "category": "外套",
+      "category_code": "6",
+      "vendor_code": "A79",
+      "original": "5522",
+      "price": 2280
+    },
+    "A79|7721": {
+      "prefix11": "96009462228",
+      "sequence": 94,
+      "category": "外套",
+      "category_code": "6",
+      "vendor_code": "A79",
+      "original": "7721",
+      "price": 2280
+    },
+    "A79|7736": {
+      "prefix11": "96009562198",
+      "sequence": 95,
+      "category": "外套",
+      "category_code": "6",
+      "vendor_code": "A79",
+      "original": "7736",
+      "price": 1980
+    },
+    "A79|7739": {
+      "prefix11": "96009662328",
+      "sequence": 96,
+      "category": "外套",
+      "category_code": "6",
+      "vendor_code": "A79",
+      "original": "7739",
+      "price": 3280
     }
   },
   "next_sequence_by_category": {
@@ -1808,7 +1844,7 @@
     "3": 11,
     "4": 22,
     "5": 20,
-    "6": 93,
+    "6": 97,
     "7": 1,
     "8": 28
   }
