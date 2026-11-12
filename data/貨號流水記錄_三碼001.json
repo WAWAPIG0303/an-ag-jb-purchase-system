@@ -616,6 +616,14 @@
       "category_code": "7",
       "vendor_code": "981",
       "original": "襪套"
+    },
+    "D22|9831": {
+      "base8": "66623013",
+      "sequence": 13,
+      "category": "外套",
+      "category_code": "6",
+      "vendor_code": "D22",
+      "original": "9831"
     }
   },
   "next_sequence_by_category": {
@@ -624,7 +632,7 @@
     "3": 1,
     "4": 16,
     "5": 8,
-    "6": 13,
+    "6": 14,
     "7": 12,
     "8": 1
   }
