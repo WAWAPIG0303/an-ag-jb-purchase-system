@@ -528,6 +528,22 @@
       "category_code": "6",
       "vendor_code": "D21",
       "original": "5808"
+    },
+    "283|豹紋雷鋒帽": {
+      "base8": "67623007",
+      "sequence": 7,
+      "category": "配件",
+      "category_code": "7",
+      "vendor_code": "283",
+      "original": "豹紋雷鋒帽"
+    },
+    "283|貓耳帽": {
+      "base8": "67623008",
+      "sequence": 8,
+      "category": "配件",
+      "category_code": "7",
+      "vendor_code": "283",
+      "original": "貓耳帽"
     }
   },
   "next_sequence_by_category": {
@@ -537,7 +553,7 @@
     "4": 16,
     "5": 8,
     "6": 13,
-    "7": 1,
+    "7": 9,
     "8": 1
   }
 }
