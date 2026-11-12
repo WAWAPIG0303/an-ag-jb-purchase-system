@@ -504,6 +504,30 @@
       "category_code": "1",
       "vendor_code": "519",
       "original": "C-6959"
+    },
+    "D21|502": {
+      "base8": "66623010",
+      "sequence": 10,
+      "category": "外套",
+      "category_code": "6",
+      "vendor_code": "D21",
+      "original": "502"
+    },
+    "D21|621": {
+      "base8": "66623011",
+      "sequence": 11,
+      "category": "外套",
+      "category_code": "6",
+      "vendor_code": "D21",
+      "original": "621"
+    },
+    "D21|5808": {
+      "base8": "66623012",
+      "sequence": 12,
+      "category": "外套",
+      "category_code": "6",
+      "vendor_code": "D21",
+      "original": "5808"
     }
   },
   "next_sequence_by_category": {
@@ -512,7 +536,7 @@
     "3": 1,
     "4": 16,
     "5": 8,
-    "6": 10,
+    "6": 13,
     "7": 1,
     "8": 1
   }
