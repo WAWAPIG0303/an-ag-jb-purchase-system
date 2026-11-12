@@ -592,6 +592,30 @@
       "category_code": "1",
       "vendor_code": "947",
       "original": "9215"
+    },
+    "981|牛仔包": {
+      "base8": "67623009",
+      "sequence": 9,
+      "category": "配件",
+      "category_code": "7",
+      "vendor_code": "981",
+      "original": "牛仔包"
+    },
+    "981|紅酒星星": {
+      "base8": "67623010",
+      "sequence": 10,
+      "category": "配件",
+      "category_code": "7",
+      "vendor_code": "981",
+      "original": "紅酒星星"
+    },
+    "981|襪套": {
+      "base8": "67623011",
+      "sequence": 11,
+      "category": "配件",
+      "category_code": "7",
+      "vendor_code": "981",
+      "original": "襪套"
     }
   },
   "next_sequence_by_category": {
@@ -601,7 +625,7 @@
     "4": 16,
     "5": 8,
     "6": 13,
-    "7": 9,
+    "7": 12,
     "8": 1
   }
 }
