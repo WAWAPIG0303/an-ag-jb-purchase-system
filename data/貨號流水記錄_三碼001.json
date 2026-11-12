@@ -1,5 +1,5 @@
 {
-  "next_sequence": 74,
+  "next_sequence": 78,
   "assignments": {
     "307|C-1556-1": {
       "base8": "61621016",
@@ -544,10 +544,42 @@
       "category_code": "7",
       "vendor_code": "283",
       "original": "貓耳帽"
+    },
+    "947|9118": {
+      "base8": "61623074",
+      "sequence": 74,
+      "category": "上衣",
+      "category_code": "1",
+      "vendor_code": "947",
+      "original": "9118"
+    },
+    "455|9186": {
+      "base8": "61623075",
+      "sequence": 75,
+      "category": "上衣",
+      "category_code": "1",
+      "vendor_code": "455",
+      "original": "9186"
+    },
+    "947|9192": {
+      "base8": "61623076",
+      "sequence": 76,
+      "category": "上衣",
+      "category_code": "1",
+      "vendor_code": "947",
+      "original": "9192"
+    },
+    "455|9215": {
+      "base8": "61623077",
+      "sequence": 77,
+      "category": "上衣",
+      "category_code": "1",
+      "vendor_code": "455",
+      "original": "9215"
     }
   },
   "next_sequence_by_category": {
-    "1": 74,
+    "1": 78,
     "2": 1,
     "3": 1,
     "4": 16,
