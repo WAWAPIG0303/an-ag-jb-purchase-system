@@ -26,7 +26,7 @@ brand = st.sidebar.radio(
     key="selected_brand",
 )
 
-st.sidebar.caption("版本：2026-11-26｜已加入 CLOUDY")
+st.sidebar.caption("版本：2026-11-26｜CLOUDY＋AN分類更新")
 
 # 切換品牌時清除畫面暫存，避免把上一品牌的照片或輸出帶過來。
 if st.session_state.get("active_brand") != brand:
@@ -138,18 +138,43 @@ SHOP_MEMBER_PRICES = {
     2180:(2071,2006,1962), 2280:(2166,2098,2052), 2380:(2261,2190,2142),
     2480:(2356,2282,2232), 2580:(2451,2374,2322),
 }
+AN_SHOP_ONLINE_CATEGORIES = (
+    "All Products / 所有商品>Top / 上身",
+    "All Products / 所有商品>Top / 上身>Two piece / 兩件式",
+    "All Products / 所有商品>Top / 上身>Knit / Sweater / 針織 / 毛衣",
+    "All Products / 所有商品>Top / 上身>Bra top / 胸墊背心",
+    "All Products / 所有商品>Top / 上身>Tank / 背心",
+    "All Products / 所有商品>Top / 上身>Shirt / 襯衫",
+    "All Products / 所有商品>Top / 上身>Short sleeve / 短袖上衣",
+    "All Products / 所有商品>Top / 上身>Long sleeve / 長袖上衣",
+    "All Products / 所有商品>Bottom / 下身",
+    "All Products / 所有商品>Bottom / 下身>Skirt / 裙裝",
+    "All Products / 所有商品>Bottom / 下身>Shorts / 短褲",
+    "All Products / 所有商品>Bottom / 下身>Pants / 長褲",
+    "All Products / 所有商品>Outerwear / 外套",
+    "All Products / 所有商品>One piece / 連身",
+    "All Products / 所有商品>One piece / 連身>Set/套裝",
+    "All Products / 所有商品>One piece / 連身>Jumpsuit / 連身褲",
+    "All Products / 所有商品>One piece / 連身>Dress / 洋裝",
+    "All Products / 所有商品>Acc / 配件",
+    "All Products / 所有商品>Acc / 配件>Other / 帽子配件",
+    "All Products / 所有商品>Acc / 配件>Shoes / 鞋子",
+    "All Products / 所有商品>Bag / 包包",
+)
+AN_SHOP_POS_CATEGORIES = ("上衣", "短褲", "長褲", "短洋", "長洋", "短裙", "長裙", "外套", "套裝", "AN鞋", "袋", "配件")
 SHOP_CLASSIFICATIONS = {
-    "上衣": ("All Products / 所有商品>Top / 上身", "上衣"),
-    "短洋": ("All Products / 所有商品>One piece / 連身>Dress / 洋裝", "短洋"),
-    "長洋": ("All Products / 所有商品>One piece / 連身>Dress / 洋裝", "長洋"),
-    "短褲": ("All Products / 所有商品>Bottom / 下身>Shorts / 短褲", "短褲"),
-    "長褲": ("All Products / 所有商品>Bottom / 下身>Pants / 長褲", "長褲"),
-    "短裙": ("All Products / 所有商品>Bottom / 下身>Skirt / 裙裝", "短裙"),
-    "長裙": ("All Products / 所有商品>Bottom / 下身>Skirt / 裙裝", "長裙"),
-    "外套": ("All Products / 所有商品>Outerwear / 外套", "外套"),
-    "配件": ("All Products / 所有商品>Acc / 配件", "配件"),
-    "套裝": ("All Products / 所有商品>Set/套裝", "套裝"),
+    "上衣": (AN_SHOP_ONLINE_CATEGORIES[0], "上衣"),
+    "短洋": (AN_SHOP_ONLINE_CATEGORIES[16], "短洋"),
+    "長洋": (AN_SHOP_ONLINE_CATEGORIES[16], "長洋"),
+    "短褲": (AN_SHOP_ONLINE_CATEGORIES[10], "短褲"),
+    "長褲": (AN_SHOP_ONLINE_CATEGORIES[11], "長褲"),
+    "短裙": (AN_SHOP_ONLINE_CATEGORIES[9], "短裙"),
+    "長裙": (AN_SHOP_ONLINE_CATEGORIES[9], "長裙"),
+    "外套": (AN_SHOP_ONLINE_CATEGORIES[12], "外套"),
+    "配件": (AN_SHOP_ONLINE_CATEGORIES[17], "配件"),
+    "套裝": (AN_SHOP_ONLINE_CATEGORIES[14], "套裝"),
 }
+
 
 @st.cache_resource(show_spinner="第一次啟動 OCR 需要載入免費模型，請稍候…")
 def get_reader():
@@ -1390,9 +1415,17 @@ def create_shopline_workbook(df, code_by_key, color_map, classifications, suppli
                 raise ValueError("請輸入 CLOUDY 網店分類完整路徑。")
             pos_category = category_choice
         else:
-            if category_choice not in SHOP_CLASSIFICATIONS:
-                raise ValueError(f"款式 {original} 尚未選擇 SHOP 分類。")
-            online_category,pos_category=SHOP_CLASSIFICATIONS[category_choice]
+            if isinstance(category_choice, dict):
+                online_category = category_choice.get("online")
+                pos_category = category_choice.get("pos")
+            elif category_choice in SHOP_CLASSIFICATIONS:
+                online_category,pos_category=SHOP_CLASSIFICATIONS[category_choice]
+            else:
+                raise ValueError(f"款式 {original} 尚未選擇 ANANAS SHOP 分類。")
+            if online_category not in AN_SHOP_ONLINE_CATEGORIES:
+                raise ValueError(f"款式 {original} 請選擇 ANANAS 網店分類。")
+            if pos_category not in AN_SHOP_POS_CATEGORIES:
+                raise ValueError(f"款式 {original} 請選擇 ANANAS POS 分類。")
         price=safe_int(first.get("售價"), None)
         cost=safe_int(first.get("進價"), None)
         if price is None:
@@ -2097,22 +2130,28 @@ if st.session_state.ocr_df is not None:
                     key=f"CLOUDY_shop_class_{n}_{vendor_code}_{original}"
                 )
         else:
-            st.caption("下身商品請逐款單選分類；同款所有顏色與尺寸會一起套用。")
-            for n,((vendor_code,original),g) in enumerate(
-                edited.groupby(["廠商代碼","原廠編號"],sort=False),1
-            ):
-                key=f"{vendor_code}|{original}"
-                system_category=str(g.iloc[0].get("類別","")).strip()
-                if system_category in ("褲子","裙子"):
-                    choices=["短褲","長褲","短裙","長裙"]
-                    default_index=0 if system_category=="褲子" else 2
-                    shop_classifications[key]=st.radio(
-                        f"款式 {original}｜下身分類",
-                        choices,index=default_index,horizontal=True,
-                        key=f"{brand}_shop_class_{n}_{vendor_code}_{original}"
+            st.caption("每款可分別選擇網店分類與 POS 分類；同款所有顏色及尺寸共用，不影響貨號編碼。")
+            for n, ((vendor_code, original), group) in enumerate(edited.groupby(["廠商代碼", "原廠編號"], sort=False), 1):
+                key = f"{vendor_code}|{original}"
+                system_category = str(group.iloc[0].get("類別", "")).strip()
+                default_online, default_pos = SHOP_CLASSIFICATIONS.get(system_category, (None, None))
+                online_col, pos_col = st.columns([2, 1])
+                with online_col:
+                    online_choice = st.selectbox(
+                        f"款式 {original}｜ANANAS 網店分類", AN_SHOP_ONLINE_CATEGORIES,
+                        index=AN_SHOP_ONLINE_CATEGORIES.index(default_online) if default_online in AN_SHOP_ONLINE_CATEGORIES else None,
+                        placeholder="請選擇網店分類",
+                        key=f"AN_shop_class_online_{n}_{vendor_code}_{original}",
+                        format_func=lambda path: path.split(">", 1)[-1].replace(">", " › ")
                     )
-                else:
-                    shop_classifications[key]=system_category
+                with pos_col:
+                    pos_choice = st.selectbox(
+                        f"款式 {original}｜ANANAS POS 分類", AN_SHOP_POS_CATEGORIES,
+                        index=AN_SHOP_POS_CATEGORIES.index(default_pos) if default_pos in AN_SHOP_POS_CATEGORIES else None,
+                        placeholder="請選擇 POS 分類",
+                        key=f"AN_shop_class_pos_{n}_{vendor_code}_{original}"
+                    )
+                shop_classifications[key] = {"online": online_choice, "pos": pos_choice}
         missing_shop_prices=[]
         for value in edited.get("售價",pd.Series(dtype=object)).tolist():
             price=safe_int(value,None)
