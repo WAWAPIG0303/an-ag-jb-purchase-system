@@ -640,6 +640,54 @@
       "category_code": "4",
       "vendor_code": "918",
       "original": "C9977"
+    },
+    "981|鉚釘星星皮帶": {
+      "base8": "67623013",
+      "sequence": 13,
+      "category": "配件",
+      "category_code": "7",
+      "vendor_code": "981",
+      "original": "鉚釘星星皮帶"
+    },
+    "981|雕花皮帶": {
+      "base8": "67623014",
+      "sequence": 14,
+      "category": "配件",
+      "category_code": "7",
+      "vendor_code": "981",
+      "original": "雕花皮帶"
+    },
+    "981|蛇紋皮帶": {
+      "base8": "67623015",
+      "sequence": 15,
+      "category": "配件",
+      "category_code": "7",
+      "vendor_code": "981",
+      "original": "蛇紋皮帶"
+    },
+    "981|愛心腰鍊": {
+      "base8": "67623016",
+      "sequence": 16,
+      "category": "配件",
+      "category_code": "7",
+      "vendor_code": "981",
+      "original": "愛心腰鍊"
+    },
+    "981|鍊條腰鍊": {
+      "base8": "67623017",
+      "sequence": 17,
+      "category": "配件",
+      "category_code": "7",
+      "vendor_code": "981",
+      "original": "鍊條腰鍊"
+    },
+    "981|小菱形花腰鍊": {
+      "base8": "67623018",
+      "sequence": 18,
+      "category": "配件",
+      "category_code": "7",
+      "vendor_code": "981",
+      "original": "小菱形花腰鍊"
     }
   },
   "next_sequence_by_category": {
@@ -649,7 +697,7 @@
     "4": 18,
     "5": 8,
     "6": 14,
-    "7": 12,
+    "7": 19,
     "8": 1
   }
 }
